@@ -3874,10 +3874,10 @@ async function cycleAppointmentStatus(id){
 }
 
 /* ---------- Sesión / login (Firebase Auth o modo local) ---------- */
-const toEmail=u=>u.trim().toLowerCase().replace(/\s+/g,'')+'@reivax.app';
+const toEmail=u=>u.trim().toLowerCase().split('@')[0].replace(/\s+/g,'')+'@reivax.app';
 function authMsg(e){
   const c=e&&e.code||'';
-  if(/invalid-credential|user-not-found|wrong-password|invalid-email/.test(c))return 'Usuario o contraseña incorrectos.';
+  if(/invalid-credential|user-not-found|wrong-password|invalid-email/.test(c))return 'Usuario o contraseña incorrectos. Escribe solo el nombre de usuario (sin @). Si es un doctor nuevo, el administrador debe usar "Crear acceso" en Doctores.';
   if(c==='auth/too-many-requests')return 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.';
   if(c==='auth/network-request-failed')return 'Sin conexión a internet.';
   if(c==='auth/operation-not-allowed')return 'Activa "Correo/contraseña" en Firebase Authentication.';
@@ -4168,7 +4168,7 @@ ADM.doctores=async m=>{
     ds.map(d=>`<tr><td><b>${esc(d.username)}</b></td><td>${esc(d.nombreCompleto)}</td><td>${esc(d.nombreClinica)}</td><td>${esc(d.telefono)}</td>
      <td><span class="pill ${d.activo===false?'off':'ok'}">${d.activo===false?'Inactivo':'Activo'}</span></td>
      <td style="white-space:nowrap"><button class="btn-soft" onclick="openPerfilForm('${d.id}')">Editar</button>
-     <button class="btn-soft" onclick="admToggleDoc('${d.id}')">${d.activo===false?'Activar':'Desactivar'}</button>
+     ${FB?`<button class="btn-soft" onclick="admCreateAccess('${d.id}')">Crear acceso</button> `:''}<button class="btn-soft" onclick="admToggleDoc('${d.id}')">${d.activo===false?'Activar':'Desactivar'}</button>
      <button class="btn-danger" onclick="deleteDoctorAccount('${d.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--muted)">No hay doctores registrados.</td></tr>'}</tbody></table></div>`;
 };
 async function admToggleDoc(id){const a=accountsIndex.find(x=>x.id===id);if(!a)return;a.activo=a.activo===false;await saveAccountsIndex();toast(a.activo?'Cuenta activada':'Cuenta desactivada');admRender();}
@@ -4249,6 +4249,18 @@ async function admExport(){
   }
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'}));
   a.download='respaldo-reivax-'+todayLocal()+'.json';a.click();
+}
+
+async function admCreateAccess(id){
+  const acc=accountsIndex.find(x=>x.id===id);if(!acc)return;
+  const pw=await customPrompt('Contraseña de acceso para "'+acc.username+'" (mínimo 6 caracteres):');
+  if(pw===null)return;
+  if(pw.length<6){await customAlert('La contraseña debe tener al menos 6 caracteres.');return;}
+  try{await fbCreateUser(acc.username,pw);await customAlert('Acceso creado. El doctor entra con usuario "'+acc.username+'" y esa contraseña.');}
+  catch(e){
+    if(e.code==='auth/email-already-in-use')await customAlert('Ese acceso ya existe en Firebase. Si olvidaron la contraseña: en Firebase → Authentication → Users elimina el usuario '+toEmail(acc.username)+' y pulsa "Crear acceso" otra vez.');
+    else await customAlert('No se pudo crear el acceso: '+authMsg(e));
+  }
 }
 /* =====================================================================
    MÓDULOS DEL DOCTOR: Orden de RX · Inventario · Apariencia
