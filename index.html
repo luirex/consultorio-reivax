@@ -4860,6 +4860,21 @@ window.openPerfilForm=function(id,self){_opf3(id,self);if(self){pfSwatches('pf-a
   };
 })();
 
+/* ---------- Icono de la pestaña (favicon) y título: usan el logo elegido ---------- */
+function setFavicon(user){
+  const p=(user&&user.prefs)||{},col=(user&&user.colorLogo)||'#E8C98A',st=p.logo||'diente';
+  let inner;
+  if(st==='imagen'&&p.logoImg)inner=`<image href="${p.logoImg}" x="4" y="4" width="56" height="56" preserveAspectRatio="xMidYMid meet"/>`;
+  else inner=logoMarkup(col,64,st,null,user&&user.nombreClinica).replace('<svg ','<svg x="0" y="0" ');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0B3F3C"/>${inner}</svg>`;
+  let l=document.querySelector('link[rel~="icon"]');if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}
+  l.type='image/svg+xml';l.href='data:image/svg+xml,'+encodeURIComponent(svg);
+  document.title=(user&&user.nombreClinica?user.nombreClinica+' · ':'')+'Historia clínica dental';
+}
+const _ab=window.applyBranding;
+window.applyBranding=function(u){_ab(u);setFavicon(u);};
+setFavicon(null);
+
 </script>
 </body>
 </html>
