@@ -1,18 +1,10 @@
 <!DOCTYPE html>
 <!--
   CONSULTORIO REIVAX · versión premium con Firebase
-  CONFIGURACIÓN (una sola vez):
-   1. console.firebase.google.com → crear proyecto → agregar app Web → copiar la configuración en FIREBASE_CONFIG (abajo).
-   2. Authentication → Sign-in method → activar "Correo electrónico/contraseña".
-   3. Authentication → Users → Add user:  controlador@reivax.app  + una contraseña (es el administrador).
-   4. Firestore Database → crear base de datos → pestaña Reglas → pegar:
-        rules_version = '2';
-        service cloud.firestore { match /databases/{db}/documents {
-          match /kv/{doc} { allow read, write: if request.auth != null && request.auth.token.email.matches('.*@reivax[.]app'); }
-        } }
-   5. Ingresa como "controlador"; desde el panel crea los doctores (se les crea el acceso automáticamente).
-   Los usuarios se convierten en correos usuario@reivax.app internamente.
-   Sin configurar Firebase el archivo funciona en MODO LOCAL (datos solo en este navegador).
+  Pasos completos en LEEME.txt (firebase.json y firestore.rules van junto a este archivo).
+  Resumen: pegar la configuración de tu app web en FIREBASE_CONFIG · activar Authentication (correo/contraseña)
+  · crear el usuario controlador@reivax.app · crear Firestore · publicar reglas y Hosting.
+  Sin configurar Firebase el archivo funciona en MODO LOCAL (datos solo en este navegador).
 -->
 
 <html lang="es">
@@ -25,12 +17,12 @@
 <script>
 try{if(localStorage.getItem('rvx-tema')==='dark')document.documentElement.dataset.theme='dark';}catch(e){}
 const FIREBASE_CONFIG = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_PROYECTO.firebaseapp.com",
-  projectId: "TU_PROYECTO",
-  storageBucket: "TU_PROYECTO.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyBZHz86RF8jzw118BAXUAFqKElIqkf_hhw",
+  authDomain: "historia-clinica-1ada0.firebaseapp.com",
+  projectId: "historia-clinica-1ada0",
+  storageBucket: "historia-clinica-1ada0.firebasestorage.app",
+  messagingSenderId: "205185925737",
+  appId: "1:205185925737:web:edfb8169cc4122531e58f8"
 };
 function todayLocal(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 </script>
@@ -3783,7 +3775,7 @@ function toast(msg){let t=$('toast');if(!t){t=document.createElement('div');t.id
 const FB=!!(window.firebase&&FIREBASE_CONFIG.apiKey&&!/^TU_/.test(FIREBASE_CONFIG.apiKey));
 let fbAuth=null,fbDb=null;
 if(FB){firebase.initializeApp(FIREBASE_CONFIG);fbAuth=firebase.auth();fbDb=firebase.firestore();}
-const CHUNK=700000, docKey=k=>k.replace(/\//g,'_');
+const CHUNK=300000, docKey=k=>k.replace(/\//g,'_');
 window.storage=FB?{
   async get(key){
     const col=fbDb.collection('kv'),id=docKey(key),s=await col.doc(id).get();
