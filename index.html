@@ -55,7 +55,8 @@ function todayLocal(){const d=new Date();return d.getFullYear()+'-'+String(d.get
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.5;}
 h1,h2,h3{font-family:var(--font-display);margin:0;}
 button{font-family:var(--font-body);cursor:pointer;}
-input,select,textarea{font-family:var(--font-body);}
+input,select,textarea,
+textarea.ta-auto{font-family:var(--font-body);}
 
 .view{display:none;}
 .view.active{display:block;}
@@ -90,8 +91,10 @@ input,select,textarea{font-family:var(--font-body);}
 .search-head h2{font-size:24px;color:var(--teal-deep);margin-bottom:6px;}
 .search-head p{color:var(--muted);font-size:13.5px;margin-bottom:22px;}
 .search-bar{display:flex;gap:10px;margin-bottom:24px;}
-.search-bar input{flex:1;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#FCFBF8;}
-.search-bar input:focus{outline:2px solid var(--teal);outline-offset:1px;}
+.search-bar input,
+.search-bar textarea.ta-auto{flex:1;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#FCFBF8;}
+.search-bar input:focus,
+.search-bar textarea.ta-auto:focus{outline:2px solid var(--teal);outline-offset:1px;}
 .search-bar button{background:var(--teal-deep);color:#fff;border:none;padding:11px 18px;border-radius:8px;font-weight:600;font-size:13.5px;white-space:nowrap;}
 .patient-list{display:flex;flex-direction:column;gap:10px;}
 .patient-row{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;}
@@ -236,22 +239,27 @@ input,select,textarea{font-family:var(--font-body);}
 @media (max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
 
 .field label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;}
-.field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:#FCFBF8;font-size:14px;color:var(--ink);}
-.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
+.field input,.field select,.field textarea,
+.field textarea.ta-auto{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:#FCFBF8;font-size:14px;color:var(--ink);}
+.field input:focus,.field select:focus,.field textarea:focus,
+.field textarea.ta-auto:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
 .field textarea{resize:vertical;min-height:70px;}
-.field.readonly input{background:var(--teal-pale);color:var(--teal-deep);font-family:var(--font-mono);font-weight:500;}
+.field.readonly input,
+.field.readonly textarea.ta-auto{background:var(--teal-pale);color:var(--teal-deep);font-family:var(--font-mono);font-weight:500;}
 
 .check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 20px;}
 @media (max-width:600px){.check-grid{grid-template-columns:1fr;}}
 .check-item{display:flex;align-items:center;gap:8px;font-size:13.5px;padding:6px 8px;border-radius:6px;}
 .check-item:hover{background:var(--teal-pale);}
-.check-item input{width:16px;height:16px;accent-color:var(--teal);}
+.check-item input,
+.check-item textarea.ta-auto{width:16px;height:16px;accent-color:var(--teal);}
 
 .vitals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
 @media (max-width:800px){.vitals-grid{grid-template-columns:repeat(2,1fr);}}
 .vital-card{border:1px solid var(--line);border-radius:8px;padding:14px;background:#FCFBF8;}
 .vital-card label{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.04em;}
-.vital-card input{width:100%;margin-top:8px;padding:8px;border:1px solid var(--line);border-radius:6px;font-family:var(--font-mono);font-size:15px;}
+.vital-card input,
+.vital-card textarea.ta-auto{width:100%;margin-top:8px;padding:8px;border:1px solid var(--line);border-radius:6px;font-family:var(--font-mono);font-size:15px;}
 .vital-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-top:8px;}
 .vital-status{font-size:11.5px;margin-top:6px;font-weight:500;}
 
@@ -337,8 +345,10 @@ table.ihos-msp .ihos-total-row td:first-child{text-align:center;font-family:var(
 table.datatable{width:100%;border-collapse:collapse;font-size:13px;}
 table.datatable th{background:var(--teal-pale);color:var(--teal-deep);font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;padding:9px 8px;border:1px solid var(--line);text-align:left;}
 table.datatable td{border:1px solid var(--line);padding:5px;}
-table.datatable td input,table.datatable td select{border:none;width:100%;padding:6px;background:transparent;font-size:13px;}
-table.datatable td input:focus,table.datatable td select:focus{outline:1.5px solid var(--teal);border-radius:4px;}
+table.datatable td input,table.datatable td select,
+table.datatable td textarea.ta-auto{border:none;width:100%;padding:6px;background:transparent;font-size:13px;}
+table.datatable td input:focus,table.datatable td select:focus,
+table.datatable td textarea.ta-auto:focus{outline:1.5px solid var(--teal);border-radius:4px;}
 table.datatable tr:nth-child(even) td{background:#FCFBF8;}
 
 .link-btn{background:var(--teal);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-size:13px;font-weight:600;margin-bottom:6px;}
@@ -384,9 +394,12 @@ table.datatable tr:nth-child(even) td{background:#FCFBF8;}
 .receta-patient{display:grid;grid-template-columns:1fr 1fr;gap:10px 40px;margin-top:26px;font-family:var(--font-serif);font-weight:700;font-size:13.5px;color:#111;}
 .receta-patient .rp-field{display:flex;align-items:baseline;gap:6px;border-bottom:1px solid #ddd;padding-bottom:4px;}
 .receta-patient .rp-field.right{justify-content:flex-end;text-align:right;}
-.receta-patient .rp-field input{border:none;background:transparent;font-family:var(--font-serif);font-weight:700;font-size:13.5px;color:#111;flex:1;padding:0;}
-.receta-patient .rp-field.right input{text-align:right;}
-.receta-patient .rp-field input:focus{outline:none;}
+.receta-patient .rp-field input,
+.receta-patient .rp-field textarea.ta-auto{border:none;background:transparent;font-family:var(--font-serif);font-weight:700;font-size:13.5px;color:#111;flex:1;padding:0;}
+.receta-patient .rp-field.right input,
+.receta-patient .rp-field.right textarea.ta-auto{text-align:right;}
+.receta-patient .rp-field input:focus,
+.receta-patient .rp-field textarea.ta-auto:focus{outline:none;}
 
 .receta-boxes{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:30px;}
 .receta-box{background:#F2F1EC;border-radius:22px;padding:18px 20px;min-height:210px;}
@@ -429,13 +442,17 @@ table.datatable tr:nth-child(even) td{background:#FCFBF8;}
 .cert-section-title{font-weight:700;text-decoration:underline;text-underline-offset:3px;margin-top:22px;margin-bottom:10px;font-size:14px;}
 .cert-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;font-size:13.5px;}
 .cert-field-grid > div{display:flex;align-items:baseline;gap:6px;}
-.cert-field-grid input{border:none;border-bottom:1px solid #ccc;background:transparent;font-family:var(--font-serif);font-size:13.5px;padding:2px 4px;flex:1;min-width:0;}
-.cert-field-grid input:focus{outline:none;border-bottom-color:var(--teal);}
+.cert-field-grid input,
+.cert-field-grid textarea.ta-auto{border:none;border-bottom:1px solid #ccc;background:transparent;font-family:var(--font-serif);font-size:13.5px;padding:2px 4px;flex:1;min-width:0;}
+.cert-field-grid input:focus,
+.cert-field-grid textarea.ta-auto:focus{outline:none;border-bottom-color:var(--teal);}
 .cert-block{font-size:13.5px;line-height:1.75;}
 .cert-block textarea{width:100%;border:1px solid var(--line);border-radius:4px;padding:9px 10px;font-family:var(--font-serif);font-size:13.5px;margin-top:6px;min-height:90px;resize:vertical;}
 .cert-block textarea:focus{outline:2px solid var(--teal);outline-offset:1px;}
-.cert-block input[type=text]{border:none;border-bottom:1px solid #ccc;background:transparent;font-family:var(--font-serif);font-size:13.5px;padding:3px 4px;}
-.cert-block input[type=text]:focus{outline:none;border-bottom-color:var(--teal);}
+.cert-block input[type=text],
+.cert-block textarea.ta-auto{border:none;border-bottom:1px solid #ccc;background:transparent;font-family:var(--font-serif);font-size:13.5px;padding:3px 4px;}
+.cert-block input[type=text]:focus,
+.cert-block textarea.ta-auto:focus{outline:none;border-bottom-color:var(--teal);}
 .cert-block input[type=number]{border:1px solid var(--line);border-radius:4px;padding:3px 6px;font-family:var(--font-mono);}
 .cert-closing{font-size:13px;margin-top:24px;line-height:1.65;text-align:justify;}
 .cert-signature{margin-top:36px;font-size:13px;line-height:1.75;}
@@ -500,10 +517,12 @@ table.datatable tr:nth-child(even) td{background:#FCFBF8;}
 }
 .modal-box h4{font-family:var(--font-display); font-size:17px; color:var(--teal-deep); margin-bottom:10px;}
 .modal-box p{font-size:14px; color:var(--ink); margin-bottom:14px; line-height:1.5;}
-.modal-box input{
+.modal-box input,
+.modal-box textarea.ta-auto{
   width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:6px; font-size:14px; margin-bottom:16px;
 }
-.modal-box input:focus{outline:2px solid var(--teal); outline-offset:1px;}
+.modal-box input:focus,
+.modal-box textarea.ta-auto:focus{outline:2px solid var(--teal); outline-offset:1px;}
 .modal-actions{display:flex; justify-content:flex-end; gap:10px;}
 .modal-actions button{padding:9px 16px; border-radius:6px; font-size:13.5px; font-weight:600; border:none;}
 .modal-actions .btn-cancel{background:transparent; border:1px solid var(--line); color:var(--muted);}
@@ -548,9 +567,11 @@ table.datatable tr:nth-child(even) td{background:#FCFBF8;}
 @media (max-width:600px){.perfil-form .grid-2{grid-template-columns:1fr;}}
 .perfil-form .field{margin-bottom:14px;}
 .perfil-form label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;}
-.perfil-form input[type=text],.perfil-form input[type=password],.perfil-form input[type=color]{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:#FCFBF8;font-size:14px;}
+.perfil-form input[type=text],.perfil-form input[type=password],.perfil-form input[type=color],
+.perfil-form textarea.ta-auto{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:#FCFBF8;font-size:14px;}
 .perfil-form input[type=color]{padding:3px;height:40px;cursor:pointer;}
-.perfil-form input:focus{outline:2px solid var(--teal);outline-offset:1px;}
+.perfil-form input:focus,
+.perfil-form textarea.ta-auto:focus{outline:2px solid var(--teal);outline-offset:1px;}
 .perfil-actions{display:flex;gap:10px;margin-top:18px;}
 .perfil-actions button{padding:11px 18px;border-radius:8px;font-weight:600;font-size:13.5px;border:none;}
 .perfil-actions .btn-save{background:var(--teal-deep);color:#fff;}
@@ -593,10 +614,16 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 
 /* inputs */
 .field input,.field select,.field textarea,.search-bar input,.agenda-search-input,.perfil-form input,.modal-box input,
-.adm-toolbar input,.adm-toolbar select,.adm-table input,.adm-table select,.adm-inline input,.adm-form input,.adm-form select,.adm-form textarea{
+.adm-toolbar input,.adm-toolbar select,.adm-table input,.adm-table select,.adm-inline input,.adm-form input,.adm-form select,.adm-form textarea,
+
+/* textarea.ta-autos */
+.field textarea.ta-auto,.search-bar textarea.ta-auto,.perfil-form textarea.ta-auto,.modal-box textarea.ta-auto,
+.adm-toolbar textarea.ta-auto,.adm-table textarea.ta-auto,.adm-inline textarea.ta-auto,.adm-form textarea.ta-auto{
   border:1px solid var(--line);border-radius:10px;background:var(--panel);font-size:13.5px;transition:border-color .15s,box-shadow .15s}
 .field input:focus,.field select:focus,.field textarea:focus,.search-bar input:focus,.agenda-search-input:focus,.perfil-form input:focus,
-.adm-toolbar input:focus,.adm-toolbar select:focus,.adm-table input:focus,.adm-table select:focus,.adm-inline input:focus,.adm-form input:focus,.adm-form select:focus,.adm-form textarea:focus{
+.adm-toolbar input:focus,.adm-toolbar select:focus,.adm-table input:focus,.adm-table select:focus,.adm-inline input:focus,.adm-form input:focus,.adm-form select:focus,.adm-form textarea:focus,
+.field textarea.ta-auto:focus,.search-bar textarea.ta-auto:focus,.perfil-form textarea.ta-auto:focus,
+.adm-toolbar textarea.ta-auto:focus,.adm-table textarea.ta-auto:focus,.adm-inline textarea.ta-auto:focus,.adm-form textarea.ta-auto:focus{
   outline:0;border-color:var(--teal);box-shadow:0 0 0 4px rgba(15,118,110,.14)}
 .field label{font-weight:600;letter-spacing:.05em;font-size:10.5px}
 
@@ -677,13 +704,15 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 .adm-card p.hint{font-size:12.5px;color:var(--muted);margin:0 0 12px}
 .adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px}
 .adm-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-.adm-toolbar input,.adm-toolbar select{padding:9px 12px;min-width:160px}
+.adm-toolbar input,.adm-toolbar select,
+.adm-toolbar textarea.ta-auto{padding:9px 12px;min-width:160px}
 .adm-table-wrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:auto;box-shadow:var(--shadow-sm)}
 .adm-table{width:100%;border-collapse:collapse;font-size:13px}
 .adm-table th{background:var(--teal-pale);color:var(--teal-deep);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;padding:11px 12px;position:sticky;top:0;white-space:nowrap}
 .adm-table td{padding:8px 12px;border-top:1px solid var(--line);vertical-align:middle}
 .adm-table tr:hover td{background:rgba(127,127,127,.07)}
-.adm-table td input,.adm-table td select{padding:7px 9px;width:100%;min-width:90px}
+.adm-table td input,.adm-table td select,
+.adm-table td textarea.ta-auto{padding:7px 9px;width:100%;min-width:90px}
 .adm-table td input[type=color]{padding:2px;height:34px;min-width:44px;width:48px;cursor:pointer}
 .adm-table td input[type=checkbox]{width:18px;min-width:0;accent-color:var(--teal)}
 .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;font-family:var(--font-mono)}
@@ -692,9 +721,10 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--teal-pale);color:var(--teal-deep);padding:6px 6px 6px 12px;border-radius:30px;font-size:12.5px;font-weight:500}
 .chip button{background:var(--panel);border:0;border-radius:50%;width:20px;height:20px;line-height:1;color:var(--clay);font-weight:700}
-.adm-inline{display:flex;gap:8px}.adm-inline input{flex:1;padding:9px 12px}
+.adm-inline{display:flex;gap:8px}.adm-inline input,.adm-inline textarea.ta-auto{flex:1;padding:9px 12px}
 .adm-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:12px}
-.adm-form input,.adm-form select,.adm-form textarea{padding:9px 11px;width:100%}
+.adm-form input,.adm-form select,.adm-form textarea,
+.adm-form textarea.ta-auto{padding:9px 11px;width:100%}
 .adm-form textarea{grid-column:1/-1;min-height:70px}
 .adm-form .btn-primary{grid-column:1/-1;justify-self:start}
 .adm-sum{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px;font-size:13px;font-family:var(--font-mono);color:var(--muted)}
@@ -710,8 +740,10 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 .badge-alert{display:none;font-family:var(--font-body);font-size:10.5px;font-weight:700;background:var(--clay);color:#fff;padding:2px 8px;border-radius:20px;vertical-align:middle;margin-left:6px}
 .pill.warn{background:#FFF1D6;color:#8A5A00}
 .fld{display:flex;flex-direction:column;gap:4px}.fld label{font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-.fld input,.fld select,.fld textarea{padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);font-size:13.5px;width:100%}
-.fld input:focus,.fld select:focus,.fld textarea:focus{outline:0;border-color:var(--teal);box-shadow:0 0 0 4px rgba(15,118,110,.14)}
+.fld input,.fld select,.fld textarea,
+.fld textarea.ta-auto{padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);font-size:13.5px;width:100%}
+.fld input:focus,.fld select:focus,.fld textarea:focus,
+.fld textarea.ta-auto:focus{outline:0;border-color:var(--teal);box-shadow:0 0 0 4px rgba(15,118,110,.14)}
 .fld textarea{min-height:64px;resize:vertical}
 .inv-alerts{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .ia{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:13px}
@@ -727,7 +759,8 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 @media(max-width:1000px){.rx-wrap{grid-template-columns:1fr}}
 .rx-tipos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .rx-chk{display:flex!important;align-items:center;gap:7px;text-transform:none!important;letter-spacing:0!important;font-size:12.5px!important;font-weight:500!important;color:var(--ink)!important;background:var(--teal-pale);padding:7px 10px;border-radius:10px;cursor:pointer}
-.rx-chk input{width:auto!important;accent-color:var(--teal)}
+.rx-chk input,
+.rx-chk textarea.ta-auto{width:auto!important;accent-color:var(--teal)}
 .rx-row{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid var(--line);align-items:center}
 .rx-sub{font-size:12px;color:var(--muted);margin-top:2px}.rx-act{display:flex;gap:6px;flex-shrink:0}
 .rx-main{min-width:0}
@@ -758,10 +791,14 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 :root[data-theme=dark] .cal-day.other,:root[data-theme=dark] .cal-day.empty,:root[data-theme=dark] .cal-day:disabled{background:transparent;opacity:.45}
 :root[data-theme=dark] .cal-day.today{box-shadow:0 0 0 2px var(--teal) inset}
 :root[data-theme=dark] .receta-page input,:root[data-theme=dark] .receta-page select,:root[data-theme=dark] .receta-page textarea,
-:root[data-theme=dark] .cert-page input,:root[data-theme=dark] .cert-page select,:root[data-theme=dark] .cert-page textarea{background:transparent;color:#16302E;border-color:#cfc8b8}
+:root[data-theme=dark] .cert-page input,:root[data-theme=dark] .cert-page select,:root[data-theme=dark] .cert-page textarea,
+:root[data-theme=dark] .receta-page textarea.ta-auto,
+:root[data-theme=dark] .cert-page textarea.ta-auto{background:transparent;color:#16302E;border-color:#cfc8b8}
 :root[data-theme=dark] .receta-page,:root[data-theme=dark] .cert-page{color:#16302E}
-:root[data-theme=dark] input,:root[data-theme=dark] select,:root[data-theme=dark] textarea{background:var(--panel);color:var(--ink);border-color:var(--line)}
-:root[data-theme=dark] input::placeholder,:root[data-theme=dark] textarea::placeholder{color:#5F7874}
+:root[data-theme=dark] input,:root[data-theme=dark] select,:root[data-theme=dark] textarea,
+:root[data-theme=dark] textarea.ta-auto{background:var(--panel);color:var(--ink);border-color:var(--line)}
+:root[data-theme=dark] input::placeholder,:root[data-theme=dark] textarea::placeholder,
+:root[data-theme=dark] textarea.ta-auto::placeholder{color:#5F7874}
 :root[data-theme=dark] .modal-box,:root[data-theme=dark] .perfil-form,:root[data-theme=dark] .login-card{background:var(--panel);color:var(--ink)}
 :root[data-theme=dark] .modal-btn{background:var(--panel);color:var(--ink)}
 :root[data-theme=dark] .pill.ok{background:#173B29;color:#7FD9A3}:root[data-theme=dark] .pill.off{background:#44201C;color:#FF9C90}:root[data-theme=dark] .pill.warn{background:#41310F;color:#F2C16A}
@@ -791,7 +828,23 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 .sw.on{box-shadow:0 0 0 3px var(--teal)}
 .sw-row input[type=color]{width:34px;height:30px;padding:0;border:0;background:transparent;cursor:pointer}
 .sw-row .btn-soft{padding:5px 10px}
+.sig-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.sig-tools .btn-soft{padding:5px 10px;font-size:12px}
+.signature-clear-x{color:var(--clay)!important;opacity:.85!important;font-size:20px!important;width:30px!important;height:30px!important;background:var(--panel)!important;border:1px solid var(--line)!important;cursor:pointer;z-index:3}
+.signature-canvas{touch-action:none!important}
+.hx-box{max-width:780px!important;width:100%;max-height:86vh;overflow:auto}
+.hx-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.hx-day{font-family:var(--font-display);font-weight:700;text-transform:capitalize;color:var(--teal-deep);margin:18px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line);position:sticky;top:-1px;background:var(--panel)}
+.hx-ev{border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:12px;padding:10px 14px;margin-bottom:8px;background:var(--panel);font-size:13.5px}
+.hx-ev.cita{border-left-color:var(--amber)}.hx-ev summary{cursor:pointer}.hx-n{font-size:11px;color:var(--muted);margin-left:6px}
+.hx-sub{font-size:12px;color:var(--muted);margin-top:3px}.hx-ev table{margin-top:8px}
+.hx-day{text-transform:none!important}.hx-day::first-letter{text-transform:uppercase}
+.hx-box .adm-toolbar input,.hx-box .adm-toolbar select,
+.hx-box .adm-toolbar textarea.ta-auto{width:auto;flex:1 1 150px;min-width:140px}
 
+
+textarea{overflow:hidden;resize:none}
+textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere;font-family:inherit;box-sizing:border-box}
+.cert-block textarea.ta-auto,.receta-page textarea.ta-auto{display:inline-block;vertical-align:bottom}
 </style>
 </head>
 <body>
@@ -1017,6 +1070,7 @@ h1,h2,h3,h4{letter-spacing:-.01em}
       <span class="patient-tag" id="historia-patient-label">Paciente nuevo</span>
     </div>
     <div class="left-group">
+      <button class="ghost" onclick="openHistorial()">🕘 Historial</button>
       <button onclick="saveCurrentPatient()">Guardar paciente</button>
       <button class="ghost" onclick="openRecetaFromHistoria()">Generar receta</button>
       <button class="ghost" onclick="openCertificadoFromHistoria()">Generar certificado</button>
@@ -4665,6 +4719,146 @@ function pfSwatches(id,key,list,def){
 }
 const _opf3=window.openPerfilForm;
 window.openPerfilForm=function(id,self){_opf3(id,self);if(self){pfSwatches('pf-acento','acento',ACENTOS,'');pfSwatches('pf-fondo','fondo',FONDOS,'');}};
+
+/* ---------- Cuadros de texto que se ajustan al contenido ---------- */
+(function(){
+  const SKIP=new Set(['password','search','checkbox','radio','file','color','date','time','number','range','email','tel','url','hidden','button','submit']);
+  function convert(inp){
+    if(inp.tagName!=='INPUT'||inp.dataset.nogrow||inp.hasAttribute('list'))return;
+    const t=(inp.getAttribute('type')||'text').toLowerCase();if(t!=='text'||SKIP.has(t))return;
+    if(inp.closest('#view-login'))return;
+    const ta=document.createElement('textarea');
+    for(const a of inp.attributes){if(['type','value','list','size','min','max','step','autocomplete'].includes(a.name))continue;ta.setAttribute(a.name,a.value);}
+    ta.rows=1;ta.classList.add('ta-auto');ta.value=inp.value||inp.getAttribute('value')||'';ta.spellcheck=true;
+    if(inp.onkeydown)ta.onkeydown=inp.onkeydown;
+    inp.replaceWith(ta);fit(ta);
+  }
+  function fit(t){
+    if(!t.offsetParent)return;
+    t._v=t.value;t._w=t.clientWidth;t.style.height='auto';t.style.height=(t.scrollHeight+t.offsetHeight-t.clientHeight)+'px';
+  }
+  function scan(root){(root.querySelectorAll?root.querySelectorAll('input'):[]).forEach(convert);if(root.tagName==='INPUT')convert(root);}
+  scan(document);
+  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1)scan(n);}))).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('input',e=>{
+    const t=e.target;if(t.tagName!=='TEXTAREA')return;
+    if(t.classList.contains('ta-auto')&&/[\r\n]/.test(t.value)){const p=t.selectionStart;t.value=t.value.replace(/[\r\n]+/g,' ');t.setSelectionRange(p,p);}
+    fit(t);
+  },true);
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList&&e.target.classList.contains('ta-auto'))e.preventDefault();},true);
+  setInterval(()=>document.querySelectorAll('textarea').forEach(t=>{if(t.offsetParent&&(t._v!==t.value||t._w!==t.clientWidth))fit(t);}),350);
+  window.addEventListener('beforeprint',()=>document.querySelectorAll('textarea').forEach(fit));
+})();
+
+/* ---------- Firmas de la historia clínica: deshacer / borrar / usar mi firma ---------- */
+(function(){
+  const snap=c=>{c._u=c._u||[];try{c._u.push(c.getContext('2d').getImageData(0,0,c.width,c.height));if(c._u.length>25)c._u.shift();}catch(e){}};
+  const refresh=w=>{try{updateSignatureHint(w);}catch(e){}};
+  ['paciente','doctor'].forEach(w=>{
+    const c=$('sig-'+w);if(!c)return;
+    c.addEventListener('pointerdown',()=>snap(c),true);
+    const row=document.createElement('div');row.className='sig-tools no-print';
+    row.innerHTML=`<button type="button" class="btn-soft" data-a="undo">↶ Deshacer</button><button type="button" class="btn-soft" data-a="clear">Borrar firma</button>`+(w==='doctor'?`<button type="button" class="btn-soft" data-a="mine">Usar mi firma guardada</button>`:'');
+    c.closest('.signature-block').appendChild(row);
+    row.onclick=e=>{
+      const a=e.target.dataset.a;if(!a)return;
+      if(a==='undo'){const s=(c._u||[]).pop();if(s)c.getContext('2d').putImageData(s,0,0);else toast('No hay nada que deshacer');refresh(w);}
+      else if(a==='clear'){snap(c);c.getContext('2d').clearRect(0,0,c.width,c.height);refresh(w);toast('Firma borrada · puedes usar "Deshacer"');}
+      else if(a==='mine'){
+        if(!currentUser||!currentUser.firma){toast('Aún no tienes firma guardada (Mis catálogos → Mi firma)');return;}
+        snap(c);const x=c.getContext('2d'),im=new Image();x.clearRect(0,0,c.width,c.height);
+        im.onload=()=>{const k=Math.min(c.width/im.width,c.height/im.height);x.drawImage(im,(c.width-im.width*k)/2,(c.height-im.height*k)/2,im.width*k,im.height*k);refresh(w);};im.src=currentUser.firma;
+      }
+    };
+  });
+  const _cs=window.clearSignature;
+  window.clearSignature=function(w){const c=$('sig-'+w);if(c)snap(c);_cs(w);};
+})();
+
+/* ---------- Historial de la historia clínica (línea de tiempo por fecha) ---------- */
+(function(){
+  const hkey=id=>'patient-hist:'+currentUser.id+':'+id;
+  const cut=(s,n)=>{s=String(s==null?'':s);return s.length>n?s.slice(0,n)+'…':s;};
+  const compact=v=>cut(JSON.stringify(v==null?'':v).replace(/[{}"\[\]]/g,'').replace(/,/g,', '),90);
+  function labelFor(id){
+    const el=document.getElementById(id);if(!el)return {s:'',l:id};
+    let l='',f=el.closest('.field,.fld,.field-group');
+    if(f){const lb=f.querySelector('label,.field-label');if(lb)l=lb.textContent;}
+    if(!l&&el.type==='checkbox')l=(el.parentElement.textContent||'');
+    if(!l){const p=el.closest('td,tr');if(p)l=(p.closest('tr').firstElementChild||{}).textContent||'';}
+    if(!l)l=el.getAttribute('placeholder')||id;
+    const sec=el.closest('.section'),sh=sec&&sec.querySelector('.section-head');
+    return {s:sh?sh.textContent.replace(/^\s*\d+\s*/,'').trim():'',l:l.replace(/\s+/g,' ').trim()};
+  }
+  function diff(prev,cur){
+    const out=[],add=(id,a,b)=>{const L=labelFor(id);out.push({s:L.s,l:L.l,a:cut(a,300),b:cut(b,300)});};
+    const pf=(prev&&prev.fields)||{},pc=(prev&&prev.checks)||{};
+    Object.keys(cur.fields).forEach(id=>{const el=document.getElementById(id);if(el&&el.readOnly)return;const a=pf[id]||'',b=cur.fields[id]||'';if(a!==b)add(id,a,b);});
+    Object.keys(cur.checks).forEach(id=>{const a=!!pc[id],b=!!cur.checks[id];if(a!==b)add(id,a?'Sí':'No',b?'Sí':'No');});
+    [['toothFaceState','Odontograma (caras)'],['toothWholeState','Odontograma (pieza completa)'],['gradeState','Grados / movilidad']].forEach(([k,name])=>{
+      const a=(prev&&prev[k])||{},b=cur[k]||{},keys=new Set([...Object.keys(a),...Object.keys(b)]);
+      keys.forEach(t=>{if(JSON.stringify(a[t])!==JSON.stringify(b[t]))out.push({s:'Odontograma',l:name+' · '+t,a:compact(a[t]),b:compact(b[t])});});
+    });
+    const np=(cur.photos||[]).length,op=((prev&&prev.photos)||[]).length;
+    if(np!==op)out.push({s:'Fotografías',l:'Fotos',a:op+'',b:np+(np>op?' (se agregaron '+(np-op)+')':' (se quitaron '+(op-np)+')')});
+    const ps=(prev&&prev.signatures)||{},cs=cur.signatures||{};
+    [['paciente','Firma del paciente'],['doctor','Firma del doctor']].forEach(([k,n])=>{if((ps[k]||'')!==(cs[k]||''))out.push({s:'Consentimiento',l:n,a:ps[k]?'firmada':'sin firma',b:cs[k]?'firmada':'sin firma'});});
+    return out;
+  }
+  const _scp=window.saveCurrentPatient;
+  window.saveCurrentPatient=async function(silent){
+    const cur=serializeHistoria(),wasId=currentPatientId;let prev=null;
+    if(wasId){try{const r=await window.storage.get('patient-data:'+currentUser.id+':'+wasId,true);prev=r?JSON.parse(r.value):null;}catch(e){}}
+    await _scp.apply(this,arguments);
+    if(!currentPatientId)return;
+    try{
+      const ch=diff(prev,prev?cur:{...cur,fields:Object.fromEntries(Object.entries(cur.fields).filter(([k,v])=>v))});
+      if(!ch.length)return;
+      const list=await kvGet(hkey(currentPatientId),[]),now=Date.now(),last=list[0];
+      if(last&&now-last.ts<300000&&!last.nuevo){ // junta guardados seguidos (≤5 min)
+        ch.forEach(c=>{const m=last.c.find(x=>x.l===c.l&&x.s===c.s);if(m)m.b=c.b;else last.c.push(c);});last.ts=now;
+        last.c=last.c.filter(c=>c.a!==c.b);if(!last.c.length)list.shift();
+      }else list.unshift({id:'h_'+now,ts:now,nuevo:!prev,c:ch});
+      await kvSet(hkey(currentPatientId),list.slice(0,200));
+    }catch(e){console.error('historial',e);}
+  };
+  const _dp=window.deletePatient;
+  window.deletePatient=async function(id){const n=patientsIndex.length;await _dp(id);if(patientsIndex.length<n){try{await window.storage.delete(hkey(id));}catch(e){}}};
+
+  /* ----- interfaz ----- */
+  let H=[],Hn='';
+  const dayKey=ts=>{const d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+  const dayLong=k=>new Date(k+'T12:00:00').toLocaleDateString('es-EC',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  function ensure(){
+    let m=$('hx-modal');if(m)return m;
+    m=document.createElement('div');m.id='hx-modal';m.className='modal-overlay';
+    m.innerHTML=`<div class="modal-box hx-box"><div class="hx-head"><div><h3 id="hx-title">Historial</h3><p class="hint" style="margin:2px 0 0">Todo lo que se fue agregando o cambiando en la historia clínica, por fecha.</p></div><button class="btn-soft" onclick="$('hx-modal').classList.remove('show')">Cerrar</button></div>
+      <div class="adm-toolbar" style="margin:12px 0"><input type="date" id="hx-date" onchange="hxRender()" title="Ver un día"><select id="hx-kind" onchange="hxRender()"><option value="">Historia y citas</option><option value="hc">Solo historia clínica</option><option value="cita">Solo citas</option></select>
+      <input type="search" id="hx-q" placeholder="Buscar en cambios…" oninput="hxRender()"><button class="btn-soft" onclick="$('hx-date').value='';$('hx-q').value='';hxRender()">Ver todo</button></div><div id="hx-list"></div></div>`;
+    m.onclick=e=>{if(e.target===m)m.classList.remove('show');};document.body.appendChild(m);return m;
+  }
+  window.openHistorial=async function(){
+    if(!currentPatientId){const n=$('p-nombres').value.trim();if(!n){await customAlert('Guarda primero al paciente para ver su historial.');return;}await _scp(true);}
+    const m=ensure();Hn=($('p-nombres').value||'').trim();$('hx-title').textContent='Historial · '+Hn;
+    H=await kvGet(hkey(currentPatientId),[]);hxRender();m.classList.add('show');
+  };
+  window.hxRender=function(){
+    const d=$('hx-date').value,kind=$('hx-kind').value,q=($('hx-q').value||'').toLowerCase().trim(),ev=[];
+    if(kind!=='cita')H.forEach(h=>ev.push({ts:h.ts,k:'hc',h}));
+    if(kind!=='hc')appointments.filter(a=>a.paciente&&a.paciente.trim().toLowerCase()===Hn.toLowerCase()).forEach(a=>ev.push({ts:new Date(a.fecha+'T'+(a.hora||'00:00')).getTime(),k:'cita',a}));
+    let L=ev.filter(e=>(!d||dayKey(e.ts)===d)&&(!q||JSON.stringify(e.h?e.h.c:e.a).toLowerCase().includes(q))).sort((x,y)=>y.ts-x.ts);
+    if(!L.length){$('hx-list').innerHTML='<div class="adm-loading" style="padding:30px">'+(H.length||d||q?'Nada para mostrar con ese filtro.':'Aún no hay cambios registrados. A partir de ahora, cada vez que guardes al paciente se anotará aquí.')+'</div>';return;}
+    let html='',cur='';
+    L.forEach(e=>{
+      const k=dayKey(e.ts);if(k!==cur){cur=k;html+=`<div class="hx-day">${esc(dayLong(k))}</div>`;}
+      const t=new Date(e.ts).toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'});
+      if(e.k==='cita')html+=`<div class="hx-ev cita"><b>📅 Cita${e.a.hora?' · '+esc(e.a.hora):''}</b> — ${esc(e.a.motivo)} <span class="pill ${e.a.estado==='Completada'?'ok':e.a.estado==='Cancelada'?'off':'warn'}">${esc(e.a.estado||'Pendiente')}</span>${e.a.notas?`<div class="hx-sub">${esc(e.a.notas)}</div>`:''}</div>`;
+      else html+=`<details class="hx-ev"><summary><b>📝 ${e.h.nuevo?'Historia creada':'Historia actualizada'}</b> · ${t} <span class="hx-n">${e.h.c.length} cambio${e.h.c.length>1?'s':''}</span></summary>
+        <table class="adm-table"><tbody>${e.h.c.map(c=>`<tr><td style="width:34%"><small style="color:var(--muted)">${esc(c.s)}</small><br><b>${esc(c.l)}</b></td><td>${c.a?`<s style="color:var(--muted)">${esc(c.a)}</s> → `:''}<b>${esc(c.b)||'(vacío)'}</b></td></tr>`).join('')}</tbody></table></details>`;
+    });
+    $('hx-list').innerHTML=html;
+  };
+})();
 
 </script>
 </body>
