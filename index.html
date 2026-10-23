@@ -850,6 +850,40 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 .hc-save-bar .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.hc-save-bar .btn-primary{padding:14px 28px;font-size:15px}
 .hc-save-sub{font-size:12.5px;color:var(--muted);text-align:center;max-width:520px}
 
+.hx-card{border:1px solid var(--line);border-radius:16px;margin-bottom:14px;background:var(--panel);box-shadow:var(--shadow-sm);overflow:hidden}
+.hx-card.cita .hx-card-h{background:linear-gradient(90deg,#FFF3DA,var(--panel))}
+:root[data-theme=dark] .hx-card.cita .hx-card-h{background:linear-gradient(90deg,#3A2E12,var(--panel))}
+.hx-card-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;background:linear-gradient(90deg,var(--teal-pale),var(--panel));border-bottom:1px solid var(--line)}
+.hx-date{font-family:var(--font-display);font-weight:700;color:var(--teal-deep);font-size:15px}.hx-date::first-letter{text-transform:uppercase}
+.hx-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hx-time{font-size:12.5px;color:var(--muted)}
+.hx-tag{font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:20px;background:var(--teal);color:#fff;text-transform:uppercase}
+.hx-n{font-size:11.5px;color:var(--muted)}
+.hx-secs{padding:6px 16px 14px}.hx-sec{margin-top:12px}
+.hx-sec-t{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-deep);margin-bottom:6px;padding-left:8px;border-left:3px solid var(--teal)}
+.hx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+.hx-box{border:1px solid var(--line);border-radius:12px;padding:9px 12px;background:var(--paper)}.hx-box.wide{grid-column:1/-1}
+.hx-lab{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.hx-val{font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
+.hx-prev{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:5px;padding-top:5px;border-top:1px dashed var(--line);overflow-wrap:anywhere}
+
+.hx-card{display:flex;gap:14px;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;background:var(--panel);box-shadow:var(--shadow-sm)}
+.hx-card.cita{border-left:4px solid var(--amber)}
+.hx-date{flex:0 0 74px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(135deg,var(--btn1),var(--btn2));color:var(--btn-ink);border-radius:14px;padding:10px 4px;height:fit-content}
+.hx-date b{font-family:var(--font-display);font-size:28px;line-height:1}.hx-date span{font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}.hx-date small{font-size:11px;opacity:.85;margin-top:6px}
+.hx-body{flex:1;min-width:0}.hx-top{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.hx-tag{font-weight:700;color:var(--teal-deep);font-size:14px}
+.hx-sec-badge{font-size:11px;font-weight:600;background:var(--teal-pale);color:var(--teal-deep);padding:3px 10px;border-radius:20px}
+.hx-sec{margin-bottom:10px}.hx-sec-t{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:6px 0}
+.hx-grid{display:grid;gap:8px}
+.hx-f{border:1px solid var(--line);border-radius:12px;padding:8px 12px;background:rgba(127,127,127,.05)}
+.hx-l{font-size:11.5px;font-weight:700;color:var(--teal-deep);margin-bottom:3px}
+.hx-v{font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
+.hx-prev{font-size:11.5px;color:var(--muted);margin-top:5px;padding-top:5px;border-top:1px dashed var(--line);overflow-wrap:anywhere}
+@media(max-width:560px){.hx-card{flex-direction:column}.hx-date{flex-direction:row;gap:8px;width:100%;flex-basis:auto;padding:8px}.hx-date b{font-size:20px}}
+
+.hx-card .hx-grid{display:flex!important;flex-direction:column;gap:8px}
+.hx-card .hx-tag{background:none!important;color:var(--teal-deep)!important;text-transform:none!important;letter-spacing:0!important;padding:0!important;font-size:14px!important;border:0!important}
+
 
 textarea{overflow:hidden;resize:none}
 textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere;font-family:inherit;box-sizing:border-box}
@@ -4822,6 +4856,7 @@ window.openPerfilForm=function(id,self){_opf3(id,self);if(self){pfSwatches('pf-a
     if(f){const lb=f.querySelector('label,.field-label');if(lb)l=lb.textContent;}
     if(!l&&el.type==='checkbox')l=(el.parentElement.textContent||'');
     if(!l){const p=el.closest('td,tr');if(p)l=(p.closest('tr').firstElementChild||{}).textContent||'';}
+    if(!l){const pm=id.match(/^plan-(fecha|proc|presc)[-_]?(\d+)/);if(pm)l=({fecha:'Fecha',proc:'Procedimientos',presc:'Prescripciones'})[pm[1]]+' — sesión '+pm[2];}
     if(!l)l=el.getAttribute('placeholder')||id;
     const sec=el.closest('.section'),sh=sec&&sec.querySelector('.section-head h3');
     return {s:sh?sh.textContent.trim():'',l:l.replace(/\s+/g,' ').trim()};
@@ -4890,21 +4925,37 @@ window.openPerfilForm=function(id,self){_opf3(id,self);if(self){pfSwatches('pf-a
     const m=ensure();Hn=($('p-nombres').value||'').trim();HS=title;$('hx-title').textContent='👁 '+title+' · '+Hn;
     H=await kvGet(hkey(currentPatientId),[]);$('hx-date').value='';$('hx-q').value='';$('hx-kind').value='';hxRender();m.classList.add('show');
   };
+  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const pretty=l=>{
+    let r;
+    if(!l||/\s/.test(l)||!/-/.test(l))return l;
+    if(r=l.match(/^plan-fecha-(\d+)$/))return 'Fecha — sesión '+r[1];
+    if(r=l.match(/^plan-diag-(\d+)$/))return 'Diagnóstico — sesión '+r[1];
+    if(r=l.match(/^plan-proc-(\d+)$/))return 'Procedimientos — sesión '+r[1];
+    if(r=l.match(/^plan-presc-(\d+)$/))return 'Prescripciones — sesión '+r[1];
+    if(r=l.match(/^diag-name-(\d+)$/))return 'Diagnóstico '+r[1];
+    if(r=l.match(/^diag-tipo-(\d+)$/))return 'Tipo de diagnóstico '+r[1];
+    if(r=l.match(/^cie-code-(\d+)$/))return 'Código CIE · diagnóstico '+r[1];
+    if(r=l.match(/^ihos-(placa|calculo|gingi)-(\d+)$/))return 'IHO-S fila '+r[2]+' · '+({placa:'placa',calculo:'cálculo',gingi:'gingivitis'})[r[1]];
+    return l.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase());
+  };
+  const dv=v=>/^\d{4}-\d{2}-\d{2}$/.test(v||'')?v.split('-').reverse().join('/'):v;
+  const fieldHTML=c=>(c={...c,a:dv(c.a),b:dv(c.b)},`<div class="hx-f"><div class="hx-l">${esc(pretty(c.l))}</div><div class="hx-v">${esc(c.b)||'<i style="color:var(--muted)">(vacío)</i>'}</div>${c.a?`<div class="hx-prev"><b>Antes:</b> ${esc(c.a)}</div>`:''}</div>`);
   window.hxRender=function(){
     const d=$('hx-date').value,kind=$('hx-kind').value,q=($('hx-q').value||'').toLowerCase().trim(),ev=[];
     if(kind!=='cita')H.forEach(h=>{const c=HS?h.c.filter(x=>x.s===HS):h.c;if(c.length)ev.push({ts:h.ts,k:'hc',h:{...h,c}});});
     if(kind!=='hc'&&!HS)appointments.filter(a=>a.paciente&&a.paciente.trim().toLowerCase()===Hn.toLowerCase()).forEach(a=>ev.push({ts:new Date(a.fecha+'T'+(a.hora||'00:00')).getTime(),k:'cita',a}));
-    let L=ev.filter(e=>(!d||dayKey(e.ts)===d)&&(!q||JSON.stringify(e.h?e.h.c:e.a).toLowerCase().includes(q))).sort((x,y)=>y.ts-x.ts);
+    const L=ev.filter(e=>(!d||dayKey(e.ts)===d)&&(!q||JSON.stringify(e.h?e.h.c:e.a).toLowerCase().includes(q))).sort((x,y)=>y.ts-x.ts);
     if(!L.length){$('hx-list').innerHTML='<div class="adm-loading" style="padding:30px">'+(H.length||d||q?(HS&&!d&&!q?'Aún no hay registros anteriores de este apartado.':'Nada para mostrar con ese filtro.'):'Aún no hay cambios registrados. A partir de ahora, cada vez que guardes al paciente se anotará aquí.')+'</div>';return;}
-    let html='',cur='';
-    L.forEach(e=>{
-      const k=dayKey(e.ts);if(k!==cur){cur=k;html+=`<div class="hx-day">${esc(dayLong(k))}</div>`;}
-      const t=new Date(e.ts).toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'});
-      if(e.k==='cita')html+=`<div class="hx-ev cita"><b>📅 Cita${e.a.hora?' · '+esc(e.a.hora):''}</b> — ${esc(e.a.motivo)} <span class="pill ${e.a.estado==='Completada'?'ok':e.a.estado==='Cancelada'?'off':'warn'}">${esc(e.a.estado||'Pendiente')}</span>${e.a.notas?`<div class="hx-sub">${esc(e.a.notas)}</div>`:''}</div>`;
-      else html+=`<details class="hx-ev" ${HS?'open':''}><summary><b>📝 ${e.h.nuevo?'Historia creada':e.h.base?'Estado anterior (antes del historial)':'Historia actualizada'}</b> · ${t} <span class="hx-n">${e.h.c.length} cambio${e.h.c.length>1?'s':''}</span></summary>
-        <table class="adm-table"><tbody>${e.h.c.map(c=>`<tr><td style="width:34%"><small style="color:var(--muted)">${esc(c.s)}</small><br><b>${esc(c.l)}</b></td><td>${c.a?`<s style="color:var(--muted)">${esc(c.a)}</s> → `:''}<b>${esc(c.b)||'(vacío)'}</b></td></tr>`).join('')}</tbody></table></details>`;
-    });
-    $('hx-list').innerHTML=html;
+    $('hx-list').innerHTML=L.map(e=>{
+      const dt=new Date(e.ts),t=dt.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'});
+      const chip=`<div class="hx-date"><b>${dt.getDate()}</b><span>${MES[dt.getMonth()]} ${dt.getFullYear()}</span><small>${t}</small></div>`;
+      if(e.k==='cita')return `<div class="hx-card cita">${chip}<div class="hx-body"><div class="hx-top"><span class="hx-tag">📅 Cita${e.a.hora?' · '+esc(e.a.hora):''}</span><span class="pill ${e.a.estado==='Completada'?'ok':e.a.estado==='Cancelada'?'off':'warn'}">${esc(e.a.estado||'Pendiente')}</span></div>
+        <div class="hx-f"><div class="hx-l">Motivo</div><div class="hx-v">${esc(e.a.motivo)}</div></div>${e.a.notas?`<div class="hx-f"><div class="hx-l">Notas</div><div class="hx-v">${esc(e.a.notas)}</div></div>`:''}</div></div>`;
+      const secs=[...new Set(e.h.c.map(c=>c.s||'General'))],tag=e.h.nuevo?'Historia creada':e.h.base?'Estado anterior al historial':'Historia actualizada';
+      return `<div class="hx-card">${chip}<div class="hx-body"><div class="hx-top"><span class="hx-tag">📝 ${tag}</span>${secs.map(s=>`<span class="hx-sec-badge">${esc(s)}</span>`).join('')}</div>
+        ${secs.map(s=>`<div class="hx-sec">${HS?'':`<div class="hx-sec-t">${esc(s)}</div>`}<div class="hx-grid">${e.h.c.filter(c=>(c.s||'General')===s).map(fieldHTML).join('')}</div></div>`).join('')}</div></div>`;
+    }).join('');
   };
 })();
 
