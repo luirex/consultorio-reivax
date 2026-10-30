@@ -883,6 +883,39 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 
 .hx-card .hx-grid{display:flex!important;flex-direction:column;gap:8px}
 .hx-card .hx-tag{background:none!important;color:var(--teal-deep)!important;text-transform:none!important;letter-spacing:0!important;padding:0!important;font-size:14px!important;border:0!important}
+.voice-btn{border:1px solid var(--line);background:var(--panel);color:var(--teal-deep);border-radius:22px;padding:7px 14px;font-weight:600;font-size:13px;cursor:pointer;box-shadow:var(--shadow-sm);display:inline-flex;gap:6px;align-items:center}
+.voice-btn:hover{border-color:var(--teal)}
+@media(max-width:560px){.voice-btn span{display:none}}
+#voz-panel{display:none;position:fixed;right:16px;bottom:16px;width:min(380px,calc(100vw - 32px));z-index:2600;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 60px -12px rgba(0,0,0,.45);padding:14px 16px}
+#voz-panel.show{display:block;animation:pop .2s ease}
+.voz-head{display:flex;align-items:center;gap:8px}.voz-head b{flex:1;color:var(--teal-deep)}
+.voz-x{border:0;background:transparent;font-size:16px;cursor:pointer;color:var(--muted)}
+.voz-dot{width:11px;height:11px;border-radius:50%;background:var(--muted)}
+.voz-dot.on{background:#E5484D;box-shadow:0 0 0 0 rgba(229,72,77,.6);animation:vozp 1.2s infinite}
+@keyframes vozp{70%{box-shadow:0 0 0 10px rgba(229,72,77,0)}100%{box-shadow:0 0 0 0 rgba(229,72,77,0)}}
+.voz-target{font-size:12px;color:var(--muted);margin-top:4px}
+.voz-heard{font-size:14px;font-weight:600;min-height:20px;margin-top:4px;overflow-wrap:anywhere}
+.voz-said{font-size:12.5px;color:var(--muted);margin:4px 0 8px;overflow-wrap:anywhere}
+.voz-confirm{display:none;gap:8px;align-items:center;background:var(--teal-pale);padding:8px 10px;border-radius:12px;margin-bottom:8px;flex-wrap:wrap}.voz-confirm span{font-weight:700}
+.voz-log{list-style:none;margin:0 0 8px;padding:0;max-height:120px;overflow:auto;font-size:12.5px}
+.voz-log li{padding:4px 8px;border-left:3px solid var(--teal);background:rgba(127,127,127,.07);border-radius:6px;margin-bottom:4px}
+.voz-type input,
+.voz-type textarea.ta-auto{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);font-size:13px}
+.voz-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}.voz-actions .btn-soft,.voz-actions .btn-primary{padding:6px 11px;font-size:12px}
+.voz-vol{font-size:11.5px;color:var(--muted);display:flex;gap:4px;align-items:center;margin-left:auto}
+.voz-flash{animation:vozf 1.6s ease}
+@keyframes vozf{0%,60%{outline:3px solid var(--btn1);outline-offset:2px;background:rgba(127,127,127,.18)}100%{outline:3px solid transparent}}
+#mlibres-btn{display:none;position:fixed;left:16px;bottom:16px;z-index:2500;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:26px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 8px 24px -8px rgba(0,0,0,.4);text-align:left}
+#mlibres-btn small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+#mlibres-btn.on{border-color:#2E9E6B;box-shadow:0 0 0 3px rgba(46,158,107,.25),0 8px 24px -8px rgba(0,0,0,.4)}
+
+.fx-days{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.fx-day{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:20px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer}
+.fx-day.on{background:linear-gradient(135deg,var(--btn1),var(--btn2));color:var(--btn-ink);border-color:transparent}
+.fx-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0 10px}.fx-bar b{flex:1;font-size:15px}
+.fx-sigs{display:flex;gap:16px;flex-wrap:wrap}.fx-sigs figure{margin:0;text-align:center}.fx-sigs img{max-width:220px;background:#fff;border:1px solid var(--line);border-radius:10px}
+
+.voz-meter{height:6px;background:rgba(127,127,127,.2);border-radius:4px;overflow:hidden;margin:8px 0 2px}.voz-meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2E9E6B,#E8C98A,#E5484D);transition:width .1s}
 
 
 textarea{overflow:hidden;resize:none}
@@ -1113,6 +1146,7 @@ textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-hei
       <span class="patient-tag" id="historia-patient-label">Paciente nuevo</span>
     </div>
     <div class="left-group">
+      <button class="ghost" onclick="openFichas()">🗂 Fichas por fecha</button>
       <button class="ghost" onclick="openHistorial()">🕘 Historial</button>
       <button onclick="saveCurrentPatient()">Guardar paciente</button>
       <button class="ghost" onclick="openRecetaFromHistoria()">Generar receta</button>
@@ -4903,6 +4937,7 @@ window.openPerfilForm=function(id,self){_opf3(id,self);if(self){pfSwatches('pf-a
   const _dp=window.deletePatient;
   window.deletePatient=async function(id){const n=patientsIndex.length;await _dp(id);if(patientsIndex.length<n){try{await window.storage.delete(hkey(id));}catch(e){}}};
 
+  window.__hx={labelFor,pretty:l=>pretty(l),dv:v=>dv(v)};
   /* ----- interfaz ----- */
   let H=[],Hn='',HS='';
   const dayKey=ts=>{const d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
@@ -5011,6 +5046,325 @@ setFavicon(null);
 })();
 
 async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
+
+/* =====================================================================
+   ASISTENTE DE VOZ PARA EL ODONTOGRAMA
+   ===================================================================== */
+(function(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const norm=t=>(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9ñ\s]/g,' ').replace(/\s+/g,' ').trim();
+  const ALL=new Set([...ADULT_UPPER,...ADULT_LOWER,...CHILD_UPPER,...CHILD_LOWER]);
+  const isAdult=n=>n<50;
+  /* palabras → dígitos */
+  const UNI={un:1,uno:1,una:1,dos:2,tres:3,cuatro:4,cinco:5,seis:6,siete:7,ocho:8};
+  const TEEN={once:11,doce:12,trece:13,catorce:14,quince:15,dieciseis:16,diecisiete:17,dieciocho:18};
+  const TENS={treinta:30,cuarenta:40,cincuenta:50,sesenta:60,setenta:70,ochenta:80};
+  function wordsToDigits(s){
+    s=s.replace(/\bveinti(un|uno|dos|tres|cuatro|cinco|seis|siete|ocho)\b/g,(m,u)=>20+UNI[u]);
+    s=s.replace(/\b(treinta|cuarenta|cincuenta|sesenta|setenta|ochenta)(?: y)? (uno|un|dos|tres|cuatro|cinco|seis|siete|ocho)\b/g,(m,t,u)=>TENS[t]+UNI[u]);
+    s=s.replace(/\b(once|doce|trece|catorce|quince|dieciseis|diecisiete|dieciocho)\b/g,m=>TEEN[m]);
+    s=s.replace(/\b(uno|un|dos|tres|cuatro|cinco|seis|siete|ocho) (uno|un|dos|tres|cuatro|cinco|seis|siete|ocho)\b/g,(m,a,b)=>''+UNI[a]+UNI[b]);
+    s=s.replace(/\b([1-8]) ([1-8])\b/g,'$1$2');
+    return s;
+  }
+  const FACE_RE=[[/\bmesial(es)?\b/,'M'],[/\bdistal(es)?\b/,'D'],[/\b(vestibular|bucal)\b/,'V'],[/\b(lingual|palatino|palatina|palatal)\b/,'L'],[/\b(oclusal|incisal|masticatoria|central)\b/,'O']];
+  const COND=[ /* prioridad: lo más específico primero */
+    {re:/\bperdid[oa] por caries\b/g,code:'PC'},{re:/\bprotesis removible\b/g,pair:['PRI','PRR']},{re:/\bprotesis fija\b|\bpuente\b/g,code:'PF'},{re:/\bprotesis total\b|\bdentadura\b/g,code:'PT'},
+    {re:/\bsellantes?\b/g,pair:['SN','SR']},{re:/\bendodoncia\b|\bconducto\b/g,pair:['ENDI','ENDR']},{re:/\bcorona\b/g,pair:['CORI','CORR']},
+    {re:/\bextraccion\b|\bextraer\b|\bexodoncia\b/g,code:'EI'},{re:/\bperdid[oa]\b|\bausente\b/g,code:'PO'},
+    {re:/\bcaries\b|\bcariad[oa]\b/g,code:'CAR'},{re:/\bobtura(?:do|da|cion)\b|\bresina\b|\brestauracion\b|\bempaste\b/g,code:'OBT'},
+    {re:/\b(?:sano|sana|sanos|quitar|borrar|limpiar)\b/g,code:'SANO'}
+  ];
+  /* ¿qué entendió? → lista de acciones (función pura, sirve también para pruebas) */
+  function parse(text,second){
+    let s=wordsToDigits(norm(text)),found=[],mask=s;
+    COND.forEach(c=>{c.re.lastIndex=0;let m;while((m=c.re.exec(mask))){found.push({pos:m.index,len:m[0].length,c});mask=mask.slice(0,m.index)+' '.repeat(m[0].length)+mask.slice(m.index+m[0].length);c.re.lastIndex=0;}});
+    found.sort((a,b)=>a.pos-b.pos);
+    const acts=[],asks=[];let lastTooth=null;
+    found.forEach((f,i)=>{
+      const seg=s.slice(f.pos,i+1<found.length?found[i+1].pos:s.length),segFull=seg;
+      let code=f.c.code;
+      if(f.c.pair){const real=/\b(realizad|hecha|hecho|colocad|terminad|completad|listo)/.test(segFull),ind=/\b(indicad|necesari|pendiente)/.test(segFull);code=f.c.pair[(real||(!ind&&second))?1:0];}
+      const items=[];let m;
+      const reN=/\b(\d{2})\b/g;while((m=reN.exec(seg)))if(ALL.has(+m[1]))items.push({p:m.index,n:+m[1]});
+      FACE_RE.forEach(([re,k])=>{const g=new RegExp(re.source,'g');while((m=g.exec(seg)))items.push({p:m.index,f:k});});
+      if(/\btodas las caras\b/.test(seg))items.push({p:seg.indexOf('todas'),f:'*'});
+      items.sort((a,b)=>a.p-b.p);
+      const groups=[];let early=[];
+      items.forEach(it=>{if(it.n){groups.push({n:it.n,faces:[...early]});early=[];}else if(groups.length)groups[groups.length-1].faces.push(it.f);else early.push(it.f);});
+      if(!groups.length&&(early.length||lastTooth)&&(lastTooth))groups.push({n:lastTooth,faces:early});
+      if(!groups.length){asks.push({code,why:'tooth'});return;}
+      const cond=CONDITIONS.find(x=>x.code===code);
+      groups.forEach(g=>{
+        lastTooth=g.n;
+        let faces=[...new Set(g.faces.flatMap(x=>x==='*'?['V','D','L','M','O']:[x]))];
+        if(cond.scope==='face'&&code!=='SANO'&&!faces.length)asks.push({code,n:g.n,why:'face'});
+        else acts.push({code,n:g.n,faces});
+      });
+    });
+    const bad=[];const reAll=/\b(\d{2})\b/g;let mm;while((mm=reAll.exec(s)))if(!ALL.has(+mm[1])&&+mm[1]>10)bad.push(+mm[1]);
+    return {acts,asks,bad,norm:s};
+  }
+  window.__vozParse=parse;
+
+  /* ----- aplicar sobre el odontograma ----- */
+  const snap=()=>({f:{...toothFaceState},w:{...toothWholeState}});
+  function restore(s){
+    Object.keys(toothFaceState).forEach(k=>delete toothFaceState[k]);Object.assign(toothFaceState,s.f);
+    Object.keys(toothWholeState).forEach(k=>delete toothWholeState[k]);Object.assign(toothWholeState,s.w);
+    document.querySelectorAll('#view-historia .face-region').forEach(f=>f.style.fill='');
+    document.querySelectorAll('#view-historia [id^="wholemark-"]').forEach(g=>g.innerHTML='');
+    document.querySelectorAll('#view-historia .fdi-num').forEach(el=>{el.style.color='';el.style.fontWeight='';});
+    repaintOdontograma();calcCPO();
+  }
+  const chartOf=(n,second)=>(isAdult(n)?'adult':'child')+(second?'R':'');
+  const FN={M:'mesial',D:'distal',V:'vestibular',L:'lingual',O:'oclusal'};
+  function flash(chart,n){const w=document.getElementById('wrap-'+chart+'-'+n);if(!w)return;const c=w.closest('.tooth-cell')||w;c.classList.remove('voz-flash');void c.offsetWidth;c.classList.add('voz-flash');
+    const r=c.getBoundingClientRect();if(r.top<120||r.bottom>innerHeight-260)c.scrollIntoView({block:'center',behavior:'smooth'});}
+  function applyOne(a,second){
+    const chart=chartOf(a.n,second),cond=CONDITIONS.find(x=>x.code===a.code),keep=selectedCondition,say=[];
+    selectedCondition=cond;
+    if(cond.scope==='number'){
+      if(toothWholeState[chart+'-'+a.n]!==a.code)handleNumberClick(chart,a.n);
+      say.push(cond.label+' en la '+a.n);
+    }else if(a.code==='SANO'&&!a.faces.length){
+      ['V','D','L','M','O'].forEach(f=>{const k=chart+'-'+a.n+'-'+f;if(toothFaceState[k])applyFace(chart,a.n,f);});
+      if(toothWholeState[chart+'-'+a.n]){delete toothWholeState[chart+'-'+a.n];renderWholeMark(chart,a.n,null);calcCPO();}
+      say.push('Pieza '+a.n+' sin marcas');
+    }else{
+      a.faces.forEach(f=>{const k=chart+'-'+a.n+'-'+f;if(a.code==='SANO'){if(toothFaceState[k])applyFace(chart,a.n,f);}else if(toothFaceState[k]!==a.code)applyFace(chart,a.n,f);});
+      say.push((a.code==='SANO'?'Sano':cond.label)+' en la '+a.n+' '+a.faces.map(f=>FN[f]).join(' y '));
+    }
+    selectedCondition=keep;updatePaletteActive();flash(chart,a.n);
+    return say.join('');
+  }
+
+  /* ----- estado del asistente ----- */
+  let rec=null,active=false,paused=false,second=false,mode='listen',pending=null,undo=[],log=[],voiceOn=true,lastEnd=0;
+  const P=()=>document.getElementById('voz-panel');
+  function ui(){
+    const p=P();if(!p)return;
+    p.querySelector('.voz-target').textContent=second?'Odontograma de tratamientos realizados':'Primer odontograma';
+    p.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',(b.dataset.t==='2')===second));
+    p.querySelector('.voz-log').innerHTML=log.slice(-6).reverse().map(l=>'<li>'+esc(l)+'</li>').join('')||'<li style="opacity:.6">Aún no se ha registrado nada.</li>';
+    p.querySelector('.voz-confirm').style.display=mode==='confirm'?'flex':'none';
+    p.querySelector('.voz-dot').className='voz-dot'+(active&&!paused?' on':'');
+  }
+  const setMsg=(cls,t)=>{const e=P()&&P().querySelector('.voz-'+cls);if(e)e.textContent=t;};
+  let speaking=false,mute=0;
+  function speak(t,done){
+    setMsg('said',t);
+    if(!voiceOn||!window.speechSynthesis){done&&done();return;}
+    try{
+      speaking=true;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=1.05;
+      let fin=false;const end=()=>{if(fin)return;fin=true;mute=Date.now()+700;speaking=false;done&&done();};
+      u.onend=end;u.onerror=end;speechSynthesis.speak(u);setTimeout(end,Math.max(2500,t.length*95));
+    }catch(e){speaking=false;done&&done();}
+  }
+  function finish(){
+    active=false;mode='listen';pending=null;if(!wakeOn){try{rec&&rec.abort();}catch(e){}rec=null;}
+    if(window.speechSynthesis)speechSynthesis.cancel();
+    const p=P();if(p)p.classList.remove('show');
+    toast('🎤 Odontograma finalizado · recuerda pulsar "Guardar historia clínica"');
+  }
+  function help(){setMsg('said','Ejemplos: "caries en la 22 mesial", "obturado 16 oclusal y distal", "extracción indicada en la 38", "endodoncia realizada en la 46", "sano 22", "segundo odontograma", "deshacer", "finalizar".');}
+
+  /* ----- interpretar lo que se dijo ----- */
+  function handle(text){
+    const s=wordsToDigits(norm(text));if(!s)return;
+    setMsg('heard','“'+text.trim()+'”');
+    if(mode==='confirm'){
+      if(/\b(si|claro|correcto|afirmativo|dale|ok|confirmo|exacto|por supuesto|finaliza)\b/.test(s)){speak('Odontograma finalizado.');setTimeout(finish,voiceOn?1800:100);mode='listen';return;}
+      if(/\b(no|negativo|continuar|continua|seguir|sigue)\b/.test(s)){mode='listen';ui();speak('De acuerdo, continúo escuchando.');return;}
+      return speak('¿Deseas finalizar el llenado de odontograma? Responde sí o no.');
+    }
+    if(/\b(finalizar|finaliza|terminar|termina|cerrar|cierra|concluir|concluyo)\b/.test(s)){mode='confirm';ui();return speak('¿Deseas finalizar el llenado de odontograma?');}
+    if(/\b(ayuda|comandos)\b/.test(s))return help();
+    if(/\b(deshacer|deshaz|borrar lo ultimo|borra lo ultimo|corregir|cancelar lo ultimo)\b/.test(s)){
+      const u=undo.pop();if(!u)return speak('No hay nada que deshacer.');restore(u.s);log.push('↶ Deshecho: '+u.t);ui();return speak('Deshecho.');}
+    if(/\b(segundo odontograma|odontograma 2|odontograma dos|tratamientos realizados|odontograma de tratamientos|odontograma realizado)\b/.test(s)){second=true;ui();return speak('Segundo odontograma, tratamientos realizados.');}
+    if(/\b(primer odontograma|primero|odontograma 1|odontograma uno|odontograma inicial)\b/.test(s)){second=false;ui();return speak('Primer odontograma.');}
+    const faceOnly=FACE_RE.some(([re])=>re.test(s));
+    if(pending&&faceOnly&&!/\b(caries|obtur|sell|corona|endodoncia|extra)/.test(s)){
+      const faces=[...new Set(FACE_RE.filter(([re])=>re.test(s)).map(([,k])=>k))];
+      const before=snap(),t=applyOne({code:pending.code,n:pending.n,faces},second);undo.push({s:before,t});log.push(t);pending=null;ui();return speak(t);
+    }
+    const r=parse(text,second);
+    if(r.acts.length){
+      const before=snap(),done=r.acts.map(a=>applyOne(a,second));
+      undo.push({s:before,t:done.join(', ')});log.push(...done);ui();
+      if(r.asks.length&&r.asks[0].why==='face'){pending=r.asks[0];return speak(done.join('. ')+'. ¿Qué cara de la '+pending.n+'?');}
+      return speak(done.join('. '));
+    }
+    if(r.asks.length){const a=r.asks[0];if(a.why==='face'){pending=a;return speak('¿Qué cara de la pieza '+a.n+'?');}return speak('¿En qué pieza?');}
+    if(r.bad.length)return speak('La pieza '+r.bad[0]+' no es válida.');
+    setMsg('said','No entendí. Prueba: "caries en la 22 mesial". Di "ayuda" para ver más ejemplos.');
+  }
+
+  /* ----- un solo reconocedor persistente (evita pedir permiso otra vez) ----- */
+  let wakeOn=false,stream=null,meter=null;
+  try{wakeOn=localStorage.getItem('rx_manoslibres')==='1';}catch(e){}
+  const viewOn=()=>!!document.querySelector('#view-historia.active');
+  async function getMic(){
+    if(stream&&stream.active)return;
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+      const ac=new (window.AudioContext||window.webkitAudioContext)(),an=ac.createAnalyser();an.fftSize=512;
+      ac.createMediaStreamSource(stream).connect(an);const buf=new Uint8Array(an.fftSize);
+      meter=setInterval(()=>{an.getByteTimeDomainData(buf);let mx=0;for(const v of buf)mx=Math.max(mx,Math.abs(v-128));
+        const bar=document.getElementById('voz-level');if(bar){bar.style.width=Math.min(100,mx*2.2)+'%';}},120);
+    }catch(e){}
+  }
+  function startRec(){
+    if(!SR||(!active&&!wakeOn)||!viewOn()&&!active)return;
+    if(rec&&rec._on)return;
+    getMic();
+    rec=new SR();rec.lang='es-EC';rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=4;
+    rec.onresult=e=>{
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        const r=e.results[i];
+        if(speaking||Date.now()<mute)continue;
+        const alts=[...r].map(x=>x.transcript);
+        if(!active){ /* en espera: solo la palabra de activación */
+          const t=alts.join(' ').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+          if(/odontograma|odonto grama|odonto/.test(t)){const s2=/(segundo|realizado|tratamientos)/.test(t);window.openVoz(s2);return;}
+          continue;
+        }
+        if(r.isFinal){ /* prueba las alternativas hasta que una se entienda */
+          let best=alts[0];for(const a of alts){const q=parse(a,second);if(q.acts.length||/finaliz|termin|cierr|deshac|segundo|primer|^\s*s[ií]\s*$|^\s*no\s*$|ayuda/i.test(a)){best=a;break;}}
+          handle(best);
+        }else setMsg('heard','… '+alts[0]);
+      }
+    };
+    rec.onerror=e=>{
+      if(e.error==='not-allowed'||e.error==='service-not-allowed'){active=false;wakeOn=false;ui();setMsg('said','No hay permiso para el micrófono. Pulsa el candado de la barra de direcciones → Micrófono → Permitir.');}
+      else if(e.error==='audio-capture')setMsg('said','No se encontró un micrófono. Puedes escribir los comandos abajo.');
+    };
+    rec.onend=()=>{rec._on=false;if(active||(wakeOn&&viewOn()))setTimeout(startRec,250);};
+    try{rec.start();rec._on=true;}catch(e){}
+    ui();
+  }
+  window.__setManosLibres=v=>{wakeOn=v;try{localStorage.setItem('rx_manoslibres',v?'1':'0');}catch(e){}if(v)startRec();else if(!active&&rec){try{rec.abort();}catch(e){}}};
+  window.__getManosLibres=()=>wakeOn;
+  setInterval(()=>{if(wakeOn&&viewOn()&&!(rec&&rec._on))startRec();},1500);
+
+  function build(){
+    if(P())return;
+    const p=document.createElement('div');p.id='voz-panel';p.className='no-print';
+    p.innerHTML=`<div class="voz-head"><span class="voz-dot"></span><b>Asistente de odontograma</b><button type="button" class="voz-x" title="Cerrar" data-a="close">✕</button></div>
+      <div class="voz-target"></div>
+      <div class="seg" style="margin:6px 0"><button type="button" data-t="1">Primero</button><button type="button" data-t="2">Realizados</button></div>
+      <div class="voz-meter" title="Nivel del micrófono"><i id="voz-level"></i></div><div class="voz-heard">Escuchando…</div><div class="voz-said">Di, por ejemplo: “caries en la 22 mesial”.</div>
+      <div class="voz-confirm"><span>¿Finalizar?</span><button type="button" class="btn-primary" data-a="yes">Sí, finalizar</button><button type="button" class="btn-soft" data-a="no">No, continuar</button></div>
+      <ul class="voz-log"></ul>
+      <div class="voz-type"><input id="voz-input" placeholder="o escribe un comando y pulsa Enter"></div>
+      <div class="voz-actions"><button type="button" class="btn-soft" data-a="undo">↶ Deshacer</button><button type="button" class="btn-soft" data-a="help">Ayuda</button><label class="voz-vol"><input type="checkbox" id="voz-tts" checked> Voz de respuesta</label><button type="button" class="btn-primary" data-a="end">Finalizar</button></div>`;
+    document.body.appendChild(p);
+    p.onclick=e=>{
+      const t=e.target;
+      if(t.dataset.t){second=t.dataset.t==='2';ui();return;}
+      const a=t.dataset.a;if(!a)return;
+      if(a==='close'){finish();}
+      else if(a==='yes')handle('si');
+      else if(a==='no')handle('no');
+      else if(a==='undo')handle('deshacer');
+      else if(a==='help')help();
+      else if(a==='end')handle('finalizar');
+    };
+    p.querySelector('#voz-tts').onchange=e=>{voiceOn=e.target.checked;};
+    p.querySelector('#voz-input').onkeydown=e=>{if(e.key==='Enter'&&e.target.value.trim()){const v=e.target.value;e.target.value='';handle(v);}};
+  }
+  window.openVoz=function(sec2){
+    build();second=!!sec2;mode='listen';pending=null;active=true;
+    P().classList.add('show');ui();
+    if(!SR){setMsg('said','Tu navegador no permite dictado por voz (usa Chrome o Edge). Mientras tanto puedes escribir los comandos abajo.');setMsg('heard','Voz no disponible');return;}
+    setMsg('heard','Escuchando…');speak(sec2?'Listo, segundo odontograma. Te escucho.':'Listo, primer odontograma. Te escucho.');
+    startRec();
+  };
+  window.__vozHandle=handle;
+  /* botones 🎤 en los encabezados de los dos odontogramas */
+  [['s9',false],['s12b',true]].forEach(([id,sec2])=>{
+    const h=document.querySelector('#'+id+' .section-head');if(!h)return;
+    const b=document.createElement('button');b.type='button';b.className='voice-btn no-print';b.innerHTML='🎤 <span>Dictar por voz</span>';b.title='Registrar el odontograma hablando';
+    b.onclick=e=>{e.stopPropagation();openVoz(sec2);};
+    const eye=h.querySelector('.eye-btn');eye?h.insertBefore(b,eye):h.appendChild(b);
+    if(eye)eye.style.marginLeft='0';b.style.marginLeft='auto';
+  });
+})();
+
+/* ===== Fichas clínicas por fecha: una copia completa de la HC por cada día guardado ===== */
+(function(){
+  const ikey=id=>'patient-snaps:'+currentUser.id+':'+id, dkey=(id,d)=>'patient-snap:'+currentUser.id+':'+id+':'+d;
+  const day=ts=>{const d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+  const fmt=k=>k.split('-').reverse().join('/');
+  const slim=d=>({...d,photos:[]});
+  const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+  const _s=window.saveCurrentPatient;
+  window.saveCurrentPatient=async function(silent){
+    await _s.apply(this,arguments);
+    if(!currentPatientId)return;
+    try{
+      const pid=currentPatientId,cur=slim(serializeHistoria()),k=day(Date.now()),idx=await kvGet(ikey(pid),[]);
+      const prevKey=idx[0]&&idx[0].d,prev=prevKey?await kvGet(dkey(pid,prevKey),null):null;
+      if(prev&&same(prev.data,cur))return;
+      const ent={d:k,ts:Date.now(),nombre:($('p-nombres').value||'').trim()};
+      const i=idx.findIndex(x=>x.d===k);if(i>=0)idx.splice(i,1);idx.unshift(ent);idx.sort((a,b)=>b.d.localeCompare(a.d));
+      await kvSet(dkey(pid,k),{ts:ent.ts,data:cur});await kvSet(ikey(pid),idx.slice(0,400));
+    }catch(e){console.error('fichas',e);}
+  };
+  const _dp=window.deletePatient;
+  window.deletePatient=async function(id){const n=patientsIndex.length;let idx=[];try{idx=await kvGet(ikey(id),[]);}catch(e){}
+    await _dp(id);if(patientsIndex.length<n){for(const x of idx){try{await window.storage.delete(dkey(id,x.d));}catch(e){}}try{await window.storage.delete(ikey(id));}catch(e){}}};
+  let cur=null;
+  function ensure(){
+    let m=$('fx-modal');if(m)return m;
+    m=document.createElement('div');m.id='fx-modal';m.className='modal-overlay';
+    m.innerHTML=`<div class="modal-box hx-box"><div class="hx-head"><div><h3 id="fx-title">Fichas por fecha</h3><p class="hint" style="margin:2px 0 0">Cada fecha guarda una copia completa de la historia clínica tal como quedó ese día. La ficha principal siempre es la más reciente.</p></div><button class="btn-soft" onclick="$('fx-modal').classList.remove('show')">Cerrar</button></div>
+    <div id="fx-days" class="fx-days"></div><div id="fx-body"></div></div>`;
+    m.onclick=e=>{if(e.target===m)m.classList.remove('show');};document.body.appendChild(m);return m;
+  }
+  const CN=c=>{const x=CONDITIONS.find(q=>q.code===c);return x?x.label:c;};
+  function render(s){
+    const d=s.data,H=window.__hx,secs={},order=[];
+    const put=(sec,l,v)=>{sec=sec||'General';if(!secs[sec]){secs[sec]=[];order.push(sec);}secs[sec].push([l,v]);};
+    Object.entries(d.fields||{}).forEach(([id,v])=>{if(!v)return;const L=H.labelFor(id);put(L.s,H.pretty(L.l),H.dv(v));});
+    Object.entries(d.checks||{}).forEach(([id,v])=>{if(!v)return;const L=H.labelFor(id);put(L.s,H.pretty(L.l),'Sí');});
+    const od={};
+    const add=(k,txt)=>{const p=k.split('-'),t=/R$/.test(p[0])?'Odontograma de Tratamientos Realizados':'Odontograma';(od[t]=od[t]||{});(od[t][p[1]]=od[t][p[1]]||[]).push(txt);};
+    Object.entries(d.toothFaceState||{}).forEach(([k,c])=>add(k,CN(c)+' ('+k.split('-')[2]+')'));
+    Object.entries(d.toothWholeState||{}).forEach(([k,c])=>add(k,CN(c)));
+    Object.entries(od).forEach(([t,teeth])=>Object.keys(teeth).sort().forEach(n=>put(t,'Pieza '+n,teeth[n].join(', '))));
+    Object.entries(d.gradeState||{}).forEach(([k,v])=>{const p=k.split('-');put('Odontograma',(p[0]==='mov'?'Movilidad':'Recesión')+' · pieza '+p[2],v);});
+    const sg=d.signatures||{};
+    let h=order.map(sec=>`<div class="hx-sec"><div class="hx-sec-t">${esc(sec)}</div><div class="hx-grid">${secs[sec].map(([l,v])=>`<div class="hx-f"><div class="hx-l">${esc(l)}</div><div class="hx-v">${esc(String(v))}</div></div>`).join('')}</div></div>`).join('');
+    if(sg.paciente||sg.doctor)h+=`<div class="hx-sec"><div class="hx-sec-t">Firmas</div><div class="fx-sigs">${sg.paciente?`<figure><img src="${sg.paciente}"><figcaption>Paciente</figcaption></figure>`:''}${sg.doctor?`<figure><img src="${sg.doctor}"><figcaption>Doctor</figcaption></figure>`:''}</div></div>`;
+    return h||'<div class="adm-loading">Esta ficha está vacía.</div>';
+  }
+  async function show(k,pid){
+    document.querySelectorAll('#fx-days button').forEach(b=>b.classList.toggle('on',b.dataset.d===k));
+    const s=await kvGet(dkey(pid,k),null);cur=s;
+    $('fx-body').innerHTML=s?`<div class="fx-bar"><b>Ficha del ${fmt(k)}</b><span class="hint">${new Date(s.ts).toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'})} · solo lectura</span><button class="btn-soft" id="fx-restore">↺ Cargar en la ficha actual</button></div>`+render(s):'<div class="adm-loading">No se encontró esa ficha.</div>';
+    const r=$('fx-restore');if(r)r.onclick=async()=>{
+      if(!(await customConfirm('Se cargará la ficha del '+fmt(k)+' en la historia actual para que la modifiques. No se guarda hasta que pulses Guardar. ¿Continuar?')))return;
+      resetForm(true);loadHistoriaData(s.data);$('fx-modal').classList.remove('show');toast('Ficha del '+fmt(k)+' cargada · pulsa Guardar para conservar los cambios');};
+  }
+  window.openFichas=async function(){
+    if(!currentPatientId){const n=$('p-nombres').value.trim();if(!n){await customAlert('Guarda primero al paciente para ver sus fichas.');return;}await _s(true);}
+    const m=ensure(),pid=currentPatientId;$('fx-title').textContent='🗂 Fichas por fecha · '+($('p-nombres').value||'').trim();
+    const idx=await kvGet(ikey(pid),[]);m.classList.add('show');
+    if(!idx.length){$('fx-days').innerHTML='';$('fx-body').innerHTML='<div class="adm-loading" style="padding:30px">Aún no hay fichas guardadas. Se creará una por cada día en que guardes la historia clínica.</div>';return;}
+    $('fx-days').innerHTML=idx.map(x=>`<button type="button" class="fx-day" data-d="${x.d}">${fmt(x.d)}</button>`).join('');
+    $('fx-days').onclick=e=>{const d=e.target.dataset.d;if(d)show(d,pid);};
+    show(idx[0].d,pid);
+  };
+})();
+
+(function(){
+  const b=document.createElement('button');b.type='button';b.id='mlibres-btn';b.className='no-print';document.body.appendChild(b);
+  const paint=()=>{const on=__getManosLibres();b.className='no-print'+(on?' on':'');b.innerHTML=on?'🎙 Manos libres: ACTIVO<small>di “empezar odontograma”</small>':'🎙 Activar manos libres';};
+  b.onclick=()=>{__setManosLibres(!__getManosLibres());paint();};
+  setInterval(()=>{b.style.display=document.querySelector('#view-historia.active')?'block':'none';paint();},1200);paint();
+})();
 
 </script>
 </body>
