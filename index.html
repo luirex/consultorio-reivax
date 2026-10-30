@@ -5082,7 +5082,7 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
     found.sort((a,b)=>a.pos-b.pos);
     const acts=[],asks=[];let lastTooth=null;
     found.forEach((f,i)=>{
-      const seg=s.slice(f.pos,i+1<found.length?found[i+1].pos:s.length),segFull=seg;
+      const seg=s.slice(i===0?0:f.pos,i+1<found.length?found[i+1].pos:s.length),segFull=seg;
       let code=f.c.code;
       if(f.c.pair){const real=/\b(realizad|hecha|hecho|colocad|terminad|completad|listo)/.test(segFull),ind=/\b(indicad|necesari|pendiente)/.test(segFull);code=f.c.pair[(real||(!ind&&second))?1:0];}
       const items=[];let m;
@@ -5132,7 +5132,8 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
       if(toothWholeState[chart+'-'+a.n]){delete toothWholeState[chart+'-'+a.n];renderWholeMark(chart,a.n,null);calcCPO();}
       say.push('Pieza '+a.n+' sin marcas');
     }else{
-      a.faces.forEach(f=>{const k=chart+'-'+a.n+'-'+f;if(a.code==='SANO'){if(toothFaceState[k])applyFace(chart,a.n,f);}else if(toothFaceState[k]!==a.code)applyFace(chart,a.n,f);});
+      const fx=f=>/^[1458]/.test(''+a.n)?({M:'D',D:'M'}[f]||f):f; /* en el dibujo, M queda siempre a la izquierda: se ajusta al lado del que realmente es mesial */
+      a.faces.forEach(f0=>{const f=fx(f0),k=chart+'-'+a.n+'-'+f;if(a.code==='SANO'){if(toothFaceState[k])applyFace(chart,a.n,f);}else if(toothFaceState[k]!==a.code)applyFace(chart,a.n,f);});
       say.push((a.code==='SANO'?'Sano':cond.label)+' en la '+a.n+' '+a.faces.map(f=>FN[f]).join(' y '));
     }
     selectedCondition=keep;updatePaletteActive();flash(chart,a.n);
