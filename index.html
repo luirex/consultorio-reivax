@@ -1300,7 +1300,7 @@ textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-hei
           <div class="fdi-row" id="fdi-adult-upper"></div>
 
           <div class="mid-block">
-            <div class="side-label">Lingual</div>
+            <div class="side-label">Palatino / Lingual</div>
             <div class="mid-cells">
               <div class="fdi-row" id="fdi-child-upper"></div>
               <div class="row-cells center" id="row-child-upper"></div>
@@ -1417,7 +1417,7 @@ textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-hei
           <div class="arch-row main"><div class="row-tag">Vestibular</div><div class="row-cells" id="row-adultR-upper"></div></div>
           <div class="fdi-row" id="fdi-adultR-upper"></div>
           <div class="mid-block">
-            <div class="side-label">Lingual</div>
+            <div class="side-label">Palatino / Lingual</div>
             <div class="mid-cells">
               <div class="fdi-row" id="fdi-childR-upper"></div>
               <div class="row-cells center" id="row-childR-upper"></div>
@@ -5060,6 +5060,8 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
   const TEEN={once:11,doce:12,trece:13,catorce:14,quince:15,dieciseis:16,diecisiete:17,dieciocho:18};
   const TENS={treinta:30,cuarenta:40,cincuenta:50,sesenta:60,setenta:70,ochenta:80};
   function wordsToDigits(s){
+    s=s.replace(/\bdiez y (uno|un|dos|tres|cuatro|cinco|seis|siete|ocho)\b/g,(x,u)=>10+UNI[u]).replace(/\bveinte y (uno|un|dos|tres|cuatro|cinco|seis|siete|ocho)\b/g,(x,u)=>20+UNI[u]);
+    s=s.replace(/\bmesio ?distal\b/g,'mesial distal').replace(/\b(mesio|mesial) ?oclusal\b/g,'mesial oclusal').replace(/\b(disto|distal) ?oclusal\b/g,'distal oclusal').replace(/\bocluso ?(distal|mesial)\b/g,'oclusal $1').replace(/\bmesio ocluso ?distal\b/g,'mesial oclusal distal').replace(/\bmedial(es)?\b/g,'mesial').replace(/\b(mesiales|distales)\b/g,x=>x.slice(0,-2)).replace(/\bpieza dental\b|\bdiente\b|\bpieza\b|\bnumero\b/g,'pieza');
     s=s.replace(/\bveinti(un|uno|dos|tres|cuatro|cinco|seis|siete|ocho)\b/g,(m,u)=>20+UNI[u]);
     s=s.replace(/\b(treinta|cuarenta|cincuenta|sesenta|setenta|ochenta)(?: y)? (uno|un|dos|tres|cuatro|cinco|seis|siete|ocho)\b/g,(m,t,u)=>TENS[t]+UNI[u]);
     s=s.replace(/\b(once|doce|trece|catorce|quince|dieciseis|diecisiete|dieciocho)\b/g,m=>TEEN[m]);
@@ -5067,12 +5069,12 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
     s=s.replace(/\b([1-8]) ([1-8])\b/g,'$1$2');
     return s;
   }
-  const FACE_RE=[[/\bmesial(es)?\b/,'M'],[/\bdistal(es)?\b/,'D'],[/\b(vestibular|bucal)\b/,'V'],[/\b(lingual|palatino|palatina|palatal)\b/,'L'],[/\b(oclusal|incisal|masticatoria|central)\b/,'O']];
+  const FACE_RE=[[/\bmesial(es)?\b/,'M'],[/\bdistal(es)?\b/,'D'],[/\b(vestibular|bucal|labial|vestibulo)\b/,'V'],[/\b(lingual|palatino|palatina|palatal|paladar)\b/,'L'],[/\b(oclusal|incisal|masticatoria|central)\b/,'O']];
   const COND=[ /* prioridad: lo más específico primero */
     {re:/\bperdid[oa] por caries\b/g,code:'PC'},{re:/\bprotesis removible\b/g,pair:['PRI','PRR']},{re:/\bprotesis fija\b|\bpuente\b/g,code:'PF'},{re:/\bprotesis total\b|\bdentadura\b/g,code:'PT'},
     {re:/\bsellantes?\b/g,pair:['SN','SR']},{re:/\bendodoncia\b|\bconducto\b/g,pair:['ENDI','ENDR']},{re:/\bcorona\b/g,pair:['CORI','CORR']},
-    {re:/\bextraccion\b|\bextraer\b|\bexodoncia\b/g,code:'EI'},{re:/\bperdid[oa]\b|\bausente\b/g,code:'PO'},
-    {re:/\bcaries\b|\bcariad[oa]\b/g,code:'CAR'},{re:/\bobtura(?:do|da|cion)\b|\bresina\b|\brestauracion\b|\bempaste\b/g,code:'OBT'},
+    {re:/\bextraccion\b|\bextraer\b|\bextrae\b|\bexodoncia\b|\bsacar\b/g,code:'EI'},{re:/\bperdid[oa]\b|\bausente\b/g,code:'PO'},
+    {re:/\bcaries\b|\bcarie\b|\bcariad[oa]\b|\bcavidad\b|\bcaria\b|\bcariosa\b/g,code:'CAR'},{re:/\bobtura(?:do|da|cion|r)?\b|\bresina\b|\brestauracion\b|\bempaste\b|\bamalgama\b|\btapad[oa]\b|\bcuracion\b|\bcurado\b|\bobturada\b/g,code:'OBT'},
     {re:/\b(?:sano|sana|sanos|quitar|borrar|limpiar)\b/g,code:'SANO'}
   ];
   /* ¿qué entendió? → lista de acciones (función pura, sirve también para pruebas) */
@@ -5102,6 +5104,7 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
         else acts.push({code,n:g.n,faces});
       });
     });
+    if(!found.length){const tn=[];let q;const rq=/\b(\d{2})\b/g;while((q=rq.exec(s)))if(ALL.has(+q[1]))tn.push(+q[1]);if(tn.length)asks.push({why:'cond',n:tn[0]});}
     const bad=[];const reAll=/\b(\d{2})\b/g;let mm;while((mm=reAll.exec(s)))if(!ALL.has(+mm[1])&&+mm[1]>10)bad.push(+mm[1]);
     return {acts,asks,bad,norm:s};
   }
@@ -5119,6 +5122,7 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
   }
   const chartOf=(n,second)=>(isAdult(n)?'adult':'child')+(second?'R':'');
   const FN={M:'mesial',D:'distal',V:'vestibular',L:'lingual',O:'oclusal'};
+  const fname=(f,n)=>f==='L'&&/^[1256]/.test(''+n)?'palatino':FN[f];
   function flash(chart,n){const w=document.getElementById('wrap-'+chart+'-'+n);if(!w)return;const c=w.closest('.tooth-cell')||w;c.classList.remove('voz-flash');void c.offsetWidth;c.classList.add('voz-flash');
     const r=c.getBoundingClientRect();if(r.top<120||r.bottom>innerHeight-260)c.scrollIntoView({block:'center',behavior:'smooth'});}
   function applyOne(a,second){
@@ -5126,22 +5130,22 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
     selectedCondition=cond;
     if(cond.scope==='number'){
       if(toothWholeState[chart+'-'+a.n]!==a.code)handleNumberClick(chart,a.n);
-      say.push(cond.label+' en la '+a.n);
+      say.push(cond.label+' '+a.n);
     }else if(a.code==='SANO'&&!a.faces.length){
       ['V','D','L','M','O'].forEach(f=>{const k=chart+'-'+a.n+'-'+f;if(toothFaceState[k])applyFace(chart,a.n,f);});
       if(toothWholeState[chart+'-'+a.n]){delete toothWholeState[chart+'-'+a.n];renderWholeMark(chart,a.n,null);calcCPO();}
-      say.push('Pieza '+a.n+' sin marcas');
+      say.push(a.n+' sin marcas');
     }else{
       const fx=f=>/^[1458]/.test(''+a.n)?({M:'D',D:'M'}[f]||f):f; /* en el dibujo, M queda siempre a la izquierda: se ajusta al lado del que realmente es mesial */
       a.faces.forEach(f0=>{const f=fx(f0),k=chart+'-'+a.n+'-'+f;if(a.code==='SANO'){if(toothFaceState[k])applyFace(chart,a.n,f);}else if(toothFaceState[k]!==a.code)applyFace(chart,a.n,f);});
-      say.push((a.code==='SANO'?'Sano':cond.label)+' en la '+a.n+' '+a.faces.map(f=>FN[f]).join(' y '));
+      say.push((a.code==='SANO'?'Sano':cond.label)+' '+a.n+' '+a.faces.map(f=>fname(f,a.n)).join(' y '));
     }
     selectedCondition=keep;updatePaletteActive();flash(chart,a.n);
     return say.join('');
   }
 
   /* ----- estado del asistente ----- */
-  let rec=null,active=false,paused=false,second=false,mode='listen',pending=null,undo=[],log=[],voiceOn=true,lastEnd=0;
+  let carry=null,rec=null,active=false,paused=false,second=false,mode='listen',pending=null,undo=[],log=[],voiceOn=true,lastEnd=0;
   const P=()=>document.getElementById('voz-panel');
   function ui(){
     const p=P();if(!p)return;
@@ -5158,7 +5162,7 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
     if(!voiceOn||!window.speechSynthesis){done&&done();return;}
     try{
       speaking=true;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=1.05;
-      let fin=false;const end=()=>{if(fin)return;fin=true;mute=Date.now()+700;speaking=false;done&&done();};
+      let fin=false;const end=()=>{if(fin)return;fin=true;mute=Date.now()+250;speaking=false;done&&done();};
       u.onend=end;u.onerror=end;speechSynthesis.speak(u);setTimeout(end,Math.max(2500,t.length*95));
     }catch(e){speaking=false;done&&done();}
   }
@@ -5190,14 +5194,15 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
       const faces=[...new Set(FACE_RE.filter(([re])=>re.test(s)).map(([,k])=>k))];
       const before=snap(),t=applyOne({code:pending.code,n:pending.n,faces},second);undo.push({s:before,t});log.push(t);pending=null;ui();return speak(t);
     }
-    const r=parse(text,second);
-    if(r.acts.length){
+    let r=parse(text,second);
+    if(!r.acts.length&&carry&&Date.now()-carry.t<12000){const r2=parse(carry.s+' '+s,second);if(r2.acts.length||r2.asks.length){r=r2;}}
+    if(r.acts.length){carry=null;
       const before=snap(),done=r.acts.map(a=>applyOne(a,second));
       undo.push({s:before,t:done.join(', ')});log.push(...done);ui();
       if(r.asks.length&&r.asks[0].why==='face'){pending=r.asks[0];return speak(done.join('. ')+'. ¿Qué cara de la '+pending.n+'?');}
       return speak(done.join('. '));
     }
-    if(r.asks.length){const a=r.asks[0];if(a.why==='face'){pending=a;return speak('¿Qué cara de la pieza '+a.n+'?');}return speak('¿En qué pieza?');}
+    if(r.asks.length){const a=r.asks[0];carry={s:(carry&&Date.now()-carry.t<12000?carry.s+' ':'')+s,t:Date.now()};if(a.why==='face'){pending=a;carry=null;return speak('¿Qué cara de la '+a.n+'?');}if(a.why==='cond')return speak('¿Qué marco en la '+a.n+'?');return speak('¿En qué pieza?');}
     if(r.bad.length)return speak('La pieza '+r.bad[0]+' no es válida.');
     setMsg('said','No entendí. Prueba: "caries en la 22 mesial". Di "ayuda" para ver más ejemplos.');
   }
