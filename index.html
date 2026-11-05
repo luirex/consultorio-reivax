@@ -1609,6 +1609,8 @@ textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-hei
   </div>
   <div class="receta-controls no-print">
     <button onclick="window.print()">Imprimir certificado</button>
+    <button class="ghost" onclick="certGuardar()">💾 Guardar certificado</button>
+    <button class="ghost" onclick="certBitacora()">📒 Bitácora de certificados</button>
     <label class="firma-toggle no-print" data-k="cert"><input type="checkbox" id="firma-on-cert" checked> Incluir mi firma</label>
     <button class="ghost" onclick="clearCertificado()">Limpiar certificado</button>
   </div>
@@ -5370,6 +5372,54 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
   const paint=()=>{const on=__getManosLibres();b.className='no-print'+(on?' on':'');b.innerHTML=on?'🎙 Manos libres: ACTIVO<small>di “empezar odontograma”</small>':'🎙 Activar manos libres';};
   b.onclick=()=>{__setManosLibres(!__getManosLibres());paint();};
   setInterval(()=>{b.style.display=document.querySelector('#view-historia.active')?'block':'none';paint();},1200);paint();
+})();
+
+/* ===== Bitácora de certificados médicos, agrupada por paciente ===== */
+(function(){
+  const KEY=()=>'cert-log:'+currentUser.id;
+  const IDS=['cert-fecha','cert-nombres','cert-hc','cert-cedula','cert-direccion','cert-telefono','cert-contingencia','cert-actividad','cert-institucion','cert-resumen','cert-diag-nombre','cert-diag-cie','cert-dias'];
+  const norm=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+  const fmtD=v=>/^\d{4}-\d{2}-\d{2}$/.test(v||'')?v.split('-').reverse().join('/'):(v||'—');
+  let LOG=[],sel=null;
+  window.certGuardar=async function(){
+    const f={};IDS.forEach(id=>{const e=$(id);f[id]=e?e.value:'';});
+    if(!f['cert-nombres'].trim()){await customAlert('Escribe el nombre del paciente antes de guardar el certificado.');return;}
+    LOG=await kvGet(KEY(),[]);
+    const now=Date.now();LOG.unshift({id:'c_'+now,ts:now,k:norm(f['cert-nombres']),nombre:f['cert-nombres'].trim(),f});
+    await kvSet(KEY(),LOG.slice(0,2000));toast('✓ Certificado guardado en la bitácora');
+  };
+  function ensure(){
+    let m=$('cb-modal');if(m)return m;
+    m=document.createElement('div');m.id='cb-modal';m.className='modal-overlay';
+    m.innerHTML=`<div class="modal-box hx-box"><div class="hx-head"><div><h3 id="cb-title">📒 Bitácora de certificados</h3><p class="hint" style="margin:2px 0 0" id="cb-sub">Pacientes con certificados guardados.</p></div><div style="display:flex;gap:8px"><button class="btn-soft" id="cb-back" style="display:none">← Pacientes</button><button class="btn-soft" onclick="$('cb-modal').classList.remove('show')">Cerrar</button></div></div>
+    <div class="adm-toolbar" style="margin:12px 0"><input type="search" id="cb-q" placeholder="🔎 Buscar paciente por nombre…" style="flex:1" autocomplete="off"></div><div id="cb-list"></div></div>`;
+    m.onclick=e=>{if(e.target===m)m.classList.remove('show');};document.body.appendChild(m);
+    $('cb-q').oninput=draw;$('cb-back').onclick=()=>{sel=null;$('cb-q').value='';draw();};
+    $('cb-list').onclick=async e=>{
+      const t=e.target.closest('[data-p],[data-open],[data-del]');if(!t)return;
+      if(t.dataset.p){sel=t.dataset.p;$('cb-q').value='';draw();}
+      else if(t.dataset.open){const c=LOG.find(x=>x.id===t.dataset.open);if(!c)return;IDS.forEach(id=>{const el=$(id);if(el)el.value=c.f[id]||'';el&&el.tagName==='TEXTAREA'&&window.autoGrowTextarea&&autoGrowTextarea(el);});updateCertText();$('cb-modal').classList.remove('show');toast('Certificado cargado · puedes imprimirlo');}
+      else if(t.dataset.del){if(!(await customConfirm('¿Eliminar este certificado de la bitácora?')))return;LOG=LOG.filter(x=>x.id!==t.dataset.del);await kvSet(KEY(),LOG);draw();}
+    };
+    return m;
+  }
+  function draw(){
+    const q=norm($('cb-q').value),box=$('cb-list');$('cb-back').style.display=sel?'':'none';
+    if(!sel){
+      const g={};LOG.forEach(c=>{(g[c.k]=g[c.k]||{n:c.nombre,c:[]}).c.push(c);});
+      let L=Object.entries(g).filter(([k])=>!q||k.includes(q)).sort((a,b)=>a[1].n.localeCompare(b[1].n,'es'));
+      $('cb-title').textContent='📒 Bitácora de certificados';$('cb-sub').textContent=L.length+' paciente'+(L.length===1?'':'s')+' con certificados';
+      box.innerHTML=L.length?L.map(([k,v])=>`<div class="hx-card" data-p="${esc(k)}" style="cursor:pointer;align-items:center"><div class="hx-body"><div class="hx-top"><span class="hx-tag" style="font-size:15px">👤 ${esc(v.n)}</span><span class="pill ok">${v.c.length} certificado${v.c.length>1?'s':''}</span><span class="hint">último: ${fmtD(v.c[0].f['cert-fecha'])}</span></div></div></div>`).join(''):'<div class="adm-loading" style="padding:30px">'+(LOG.length?'Ningún paciente coincide con la búsqueda.':'Aún no hay certificados guardados. Usa “Guardar certificado” al terminar uno.')+'</div>';
+    }else{
+      const L=LOG.filter(c=>c.k===sel&&(!q||JSON.stringify(c.f).toLowerCase().includes(q)));
+      const nm=(LOG.find(c=>c.k===sel)||{}).nombre||'';
+      $('cb-title').textContent='📒 '+nm;$('cb-sub').textContent=L.length+' certificado'+(L.length===1?'':'s');
+      box.innerHTML=L.length?L.map(c=>{const f=c.f;return `<div class="hx-card"><div class="hx-date"><b>${(f['cert-fecha']||'').split('-')[2]||'—'}</b><span>${fmtD(f['cert-fecha']).split('/').slice(1).join('/')}</span></div><div class="hx-body"><div class="hx-top"><span class="hx-tag">📄 Certificado médico</span>${f['cert-dias']?`<span class="pill warn">${esc(f['cert-dias'])} día(s) de reposo</span>`:''}<span style="margin-left:auto;display:flex;gap:6px"><button class="btn-soft" data-open="${c.id}">Abrir / imprimir</button><button class="btn-danger" data-del="${c.id}">Eliminar</button></span></div>
+        ${f['cert-diag-nombre']?`<div class="hx-f"><div class="hx-l">Diagnóstico</div><div class="hx-v">${esc(f['cert-diag-nombre'])}${f['cert-diag-cie']?' · '+esc(f['cert-diag-cie']):''}</div></div>`:''}
+        ${f['cert-resumen']?`<div class="hx-f"><div class="hx-l">Cuadro clínico</div><div class="hx-v">${esc(f['cert-resumen'])}</div></div>`:''}</div></div>`;}).join(''):'<div class="adm-loading" style="padding:30px">Sin resultados.</div>';
+    }
+  }
+  window.certBitacora=async function(){const m=ensure();LOG=await kvGet(KEY(),[]);sel=null;$('cb-q').value='';draw();m.classList.add('show');setTimeout(()=>$('cb-q').focus(),50);};
 })();
 
 </script>
