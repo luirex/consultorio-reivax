@@ -917,6 +917,30 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 
 .voz-meter{height:6px;background:rgba(127,127,127,.2);border-radius:4px;overflow:hidden;margin:8px 0 2px}.voz-meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2E9E6B,#E8C98A,#E5484D);transition:width .1s}
 
+/* ---- Certificado: formato configurable y firma con espacio ---- */
+#view-certificado .cert-page{font-family:var(--cf-font,Arial,Helvetica,sans-serif);font-size:var(--cf-size,15px);line-height:1.6;color:#111}
+#view-certificado .cert-page *{font-family:inherit}
+#view-certificado .cert-page .cert-header-left,#view-certificado .cert-page .cert-dateline,#view-certificado .cert-page .cert-field-grid,#view-certificado .cert-page .cert-block,#view-certificado .cert-page .cert-closing,#view-certificado .cert-page .cert-signature,#view-certificado .cert-page input,#view-certificado .cert-page textarea,#view-certificado .cert-page textarea.ta-auto{font-size:1em}
+#view-certificado .cert-page .cert-title{font-size:1.25em}
+#view-certificado .cert-page .cert-section-title{font-size:1.05em}
+#view-certificado .cert-page .cert-doc-name{font-size:1.15em}
+#view-certificado .cert-page input,#view-certificado .cert-page textarea,
+#view-certificado .cert-page textarea.ta-auto{color:#000;line-height:1.5}
+#view-certificado .cert-signature{break-inside:avoid;page-break-inside:avoid}
+.cert-sign-space{height:var(--cf-sign,90px);position:relative;display:flex;align-items:flex-end;margin-top:6px}
+.cert-sign-space .firma-img{margin:0;max-height:var(--cf-sign,90px);max-width:260px;position:static}
+.cert-sign-line{border-top:1.5px solid #111;width:300px;max-width:100%;margin-bottom:4px}
+.cert-fmt{margin:0 auto 12px;max-width:800px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.cert-fmt summary{cursor:pointer;font-weight:700;color:var(--teal-deep)}
+.cert-fmt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 16px;margin-top:10px}
+.cert-fmt label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+.cert-fmt select,.cert-fmt input[type=range]{width:100%}
+.cert-fmt select{padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}
+@media print{
+  #view-certificado .cert-page{font-size:var(--cf-psize,12.5px);line-height:1.45;padding:8mm 14mm}
+  #view-certificado .cert-page .cert-header-left,#view-certificado .cert-page .cert-dateline,#view-certificado .cert-page .cert-field-grid,#view-certificado .cert-page .cert-block,#view-certificado .cert-page .cert-closing,#view-certificado .cert-page .cert-signature,#view-certificado .cert-page input,#view-certificado .cert-page textarea,#view-certificado .cert-page textarea.ta-auto{font-size:1em}
+}
+
 
 textarea{overflow:hidden;resize:none}
 textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere;font-family:inherit;box-sizing:border-box}
@@ -1679,8 +1703,8 @@ textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-hei
         <div id="cert-sig-regsan">Reg. Sant.: 1060-2024-3006793</div>
         <div id="cert-sig-especialidad">Odontólogo General.</div>
         <div>Correo electrónico: <span id="cert-sig-email">reivaxdental@gmail.com</span></div>
-        <div style="margin-top:30px;" id="cert-sig-name2">Odont. Luiggy Ruiz Jiménez</div>
-        <div>FIRMA: ________________________________</div>
+        <div class="cert-sign-space"></div><div class="cert-sign-line"></div><div id="cert-sig-name2">Odont. Luiggy Ruiz Jiménez</div>
+        <div>Firma</div>
       </div>
     </div>
   </div>
@@ -5420,6 +5444,55 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
     }
   }
   window.certBitacora=async function(){const m=ensure();LOG=await kvGet(KEY(),[]);sel=null;$('cb-q').value='';draw();m.classList.add('show');setTimeout(()=>$('cb-q').focus(),50);};
+})();
+
+/* ===== Formato del certificado (letra, tamaño, alineación, espacio de firma) ===== */
+(function(){
+  const FONTS={'Arial':'Arial,Helvetica,sans-serif','Verdana':'Verdana,Geneva,sans-serif','Tahoma':'Tahoma,Geneva,sans-serif','Segoe UI / Calibri':"'Segoe UI',Calibri,Arial,sans-serif",'Georgia':'Georgia,serif','Times New Roman':"'Times New Roman',Times,serif"};
+  const GROUPS=[['head','Encabezado del doctor','.cert-header-left','left'],['date','Fecha','.cert-dateline','right'],['title','Título “CERTIFICADO MÉDICO”','.cert-title','center'],['datos','Datos del paciente','.cert-field-grid','left'],['clin','Examen clínico y diagnósticos','.cert-block','left'],['cierre','Texto de cierre (“Es todo lo que puedo certificar…”)','.cert-closing','justify'],['firma','Bloque de firma','.cert-signature','left']];
+  const DEF={font:'Arial',size:15,psize:12.5,sign:90,al:Object.fromEntries(GROUPS.map(g=>[g[0],g[3]]))};
+  let F=JSON.parse(JSON.stringify(DEF));
+  const key=()=>'cert-fmt:'+(currentUser?currentUser.id:'x');
+  function apply(){
+    const pg=document.querySelector('#view-certificado .cert-page');if(!pg)return;
+    pg.style.setProperty('--cf-font',FONTS[F.font]||FONTS.Arial);pg.style.setProperty('--cf-size',F.size+'px');pg.style.setProperty('--cf-psize',F.psize+'px');pg.style.setProperty('--cf-sign',F.sign+'px');
+    GROUPS.forEach(([k,,sel])=>{pg.querySelectorAll(sel).forEach(e=>{e.style.textAlign=F.al[k]||'left';});});
+    pg.querySelectorAll('.cert-block textarea').forEach(t=>{t.style.textAlign=F.al.clin==='justify'?'justify':F.al.clin;});
+  }
+  async function load(){let v=null;try{v=await kvGet(key(),null);}catch(e){}if(v)F={...DEF,...v,al:{...DEF.al,...(v.al||{})}};sync();apply();}
+  async function save(){try{await kvSet(key(),F);}catch(e){}}
+  let box;
+  function build(){
+    const ctr=document.querySelector('#view-certificado .receta-controls');if(!ctr||box)return;
+    box=document.createElement('details');box.className='cert-fmt no-print';
+    const opt=(arr,v)=>arr.map(([a,b])=>`<option value="${a}"${a===v?' selected':''}>${b}</option>`).join('');
+    const AL=[['left','Izquierda'],['center','Centrado'],['justify','Justificado'],['right','Derecha']];
+    box.innerHTML=`<summary>⚙ Formato del certificado (letra, tamaño, alineación y firma)</summary><div class="cert-fmt-grid">
+      <label>Tipo de letra<select data-f="font">${Object.keys(FONTS).map(k=>`<option style="font-family:${FONTS[k]}">${k}</option>`).join('')}</select></label>
+      <label>Tamaño en pantalla: <b id="cf-sz-v"></b><input type="range" min="12" max="20" step="0.5" data-f="size"></label>
+      <label>Tamaño al imprimir: <b id="cf-ps-v"></b><input type="range" min="10" max="16" step="0.5" data-f="psize"></label>
+      <label>Espacio para firmar: <b id="cf-sg-v"></b><input type="range" min="40" max="160" step="5" data-f="sign"></label>
+      ${GROUPS.map(([k,n])=>`<label>${n}<select data-a="${k}">${opt(AL,F.al[k])}</select></label>`).join('')}
+      <label style="justify-content:flex-end"><button type="button" class="btn-soft" id="cf-reset">Restablecer formato</button></label></div>`;
+    ctr.after(box);
+    box.oninput=box.onchange=e=>{const t=e.target;
+      if(t.dataset.f){F[t.dataset.f]=t.type==='range'?+t.value:t.value;}else if(t.dataset.a){F.al[t.dataset.a]=t.value;}else return;
+      sync();apply();save();};
+    box.querySelector('#cf-reset').onclick=()=>{F=JSON.parse(JSON.stringify(DEF));sync();apply();save();};
+    /* la firma del doctor va dentro del espacio para firmar */
+    const sp=document.querySelector('.cert-sign-space'),im=$('cert-firma-img');if(sp&&im)sp.appendChild(im);
+    sync();
+  }
+  function sync(){
+    if(!box)return;
+    box.querySelector('[data-f=font]').value=F.font;
+    [['size','cf-sz-v'],['psize','cf-ps-v'],['sign','cf-sg-v']].forEach(([k,id])=>{box.querySelector('[data-f='+k+']').value=F[k];$(id).textContent=F[k]+(k==='sign'?' px':' px');});
+    GROUPS.forEach(([k])=>{box.querySelector('[data-a='+k+']').value=F.al[k];});
+  }
+  build();
+  const _sv=window.showView;
+  window.showView=function(v){const r=_sv.apply(this,arguments);if(v==='certificado'){build();load();}return r;};
+  apply();
 })();
 
 </script>
