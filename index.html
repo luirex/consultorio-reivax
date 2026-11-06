@@ -941,6 +941,26 @@ h1,h2,h3,h4{letter-spacing:-.01em}
   #view-certificado .cert-page .cert-header-left,#view-certificado .cert-page .cert-dateline,#view-certificado .cert-page .cert-field-grid,#view-certificado .cert-page .cert-block,#view-certificado .cert-page .cert-closing,#view-certificado .cert-page .cert-signature,#view-certificado .cert-page input,#view-certificado .cert-page textarea,#view-certificado .cert-page textarea.ta-auto{font-size:1em}
 }
 
+#view-certificado .cert-page .cert-section-title{margin-top:calc(18px*var(--cf-gap,1));margin-bottom:calc(8px*var(--cf-gap,1))}
+#view-certificado .cert-page .cert-title{margin:calc(20px*var(--cf-gap,1)) 0}
+#view-certificado .cert-page .cert-closing{margin-top:calc(20px*var(--cf-gap,1))}
+#view-certificado .cert-page .cert-signature{margin-top:calc(24px*var(--cf-gap,1))}
+#view-certificado .cert-page .cert-block textarea{min-height:0;overflow:hidden;resize:none}
+.cert-fmt-rows{display:flex;flex-direction:column;gap:6px}
+.cf-row{display:grid;grid-template-columns:minmax(150px,1.3fr) 1.2fr 46px 120px;gap:10px;align-items:center;font-size:12.5px}
+.cf-row select{padding:4px 6px}
+@media(max-width:640px){.cf-row{grid-template-columns:1fr 1fr}.cf-row span{grid-column:1/-1;font-weight:600}}
+@media print{
+  #view-certificado .cert-page{padding:6mm 12mm}
+  #view-certificado .cert-page .cert-section-title{margin-top:calc(10px*var(--cf-gap,1));margin-bottom:calc(4px*var(--cf-gap,1))}
+  #view-certificado .cert-page .cert-title{margin:calc(10px*var(--cf-gap,1)) 0}
+  #view-certificado .cert-page .cert-closing{margin-top:calc(10px*var(--cf-gap,1))}
+  #view-certificado .cert-page .cert-signature{margin-top:calc(10px*var(--cf-gap,1))}
+  #view-certificado .cert-page .cert-block textarea{min-height:0 !important;padding:2px 0 !important;border:none !important;margin:0 !important}
+  #view-certificado .cert-page .cert-block{line-height:1.45}
+}
+@media print{#view-certificado .print-mirror{display:block !important;padding:2px 0;line-height:1.45}}
+
 
 textarea{overflow:hidden;resize:none}
 textarea.ta-auto{display:block;resize:none;overflow:hidden;min-height:0;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere;font-family:inherit;box-sizing:border-box}
@@ -5446,52 +5466,73 @@ async function saveAndBack(){await saveCurrentPatient();goToBuscar();}
   window.certBitacora=async function(){const m=ensure();LOG=await kvGet(KEY(),[]);sel=null;$('cb-q').value='';draw();m.classList.add('show');setTimeout(()=>$('cb-q').focus(),50);};
 })();
 
-/* ===== Formato del certificado (letra, tamaño, alineación, espacio de firma) ===== */
+/* ===== Formato del certificado (letra, tamaño y alineación por apartado, espacio de firma) ===== */
 (function(){
   const FONTS={'Arial':'Arial,Helvetica,sans-serif','Verdana':'Verdana,Geneva,sans-serif','Tahoma':'Tahoma,Geneva,sans-serif','Segoe UI / Calibri':"'Segoe UI',Calibri,Arial,sans-serif",'Georgia':'Georgia,serif','Times New Roman':"'Times New Roman',Times,serif"};
-  const GROUPS=[['head','Encabezado del doctor','.cert-header-left','left'],['date','Fecha','.cert-dateline','right'],['title','Título “CERTIFICADO MÉDICO”','.cert-title','center'],['datos','Datos del paciente','.cert-field-grid','left'],['clin','Examen clínico y diagnósticos','.cert-block','left'],['cierre','Texto de cierre (“Es todo lo que puedo certificar…”)','.cert-closing','justify'],['firma','Bloque de firma','.cert-signature','left']];
-  const DEF={font:'Arial',size:15,psize:12.5,sign:90,al:Object.fromEntries(GROUPS.map(g=>[g[0],g[3]]))};
-  let F=JSON.parse(JSON.stringify(DEF));
+  const pg=()=>document.querySelector('#view-certificado .cert-page');
+  const blocks=()=>pg().querySelectorAll('.cert-block');
+  const GROUPS=[
+    ['head','Encabezado del doctor',()=>[pg().querySelector('.cert-header-left')],'left'],
+    ['date','Fecha',()=>[pg().querySelector('.cert-dateline')],'right'],
+    ['title','Título “CERTIFICADO MÉDICO”',()=>[pg().querySelector('.cert-title')],'center'],
+    ['sect','Títulos de apartados (INFORMACIÓN, EXAMEN…)',()=>[...pg().querySelectorAll('.cert-section-title')],'left'],
+    ['datos','Datos del paciente',()=>[pg().querySelector('.cert-field-grid')],'left'],
+    ['clin','Examen clínico (resumen)',()=>[blocks()[0]],'left'],
+    ['diag','Diagnósticos',()=>[blocks()[1]],'left'],
+    ['indic','Indicaciones (reposo)',()=>[blocks()[2]],'left'],
+    ['cierre','Texto de cierre (“Es todo lo que puedo certificar…”)',()=>[pg().querySelector('.cert-closing')],'justify'],
+    ['firma','Bloque de firma',()=>[pg().querySelector('.cert-signature')],'left']];
+  const DEF={font:'Arial',size:15,psize:12.5,sign:90,gap:100,al:{},sz:{}};
+  GROUPS.forEach(g=>{DEF.al[g[0]]=g[3];DEF.sz[g[0]]=100;});
+  let F=JSON.parse(JSON.stringify(DEF)),box;
   const key=()=>'cert-fmt:'+(currentUser?currentUser.id:'x');
   function apply(){
-    const pg=document.querySelector('#view-certificado .cert-page');if(!pg)return;
-    pg.style.setProperty('--cf-font',FONTS[F.font]||FONTS.Arial);pg.style.setProperty('--cf-size',F.size+'px');pg.style.setProperty('--cf-psize',F.psize+'px');pg.style.setProperty('--cf-sign',F.sign+'px');
-    GROUPS.forEach(([k,,sel])=>{pg.querySelectorAll(sel).forEach(e=>{e.style.textAlign=F.al[k]||'left';});});
-    pg.querySelectorAll('.cert-block textarea').forEach(t=>{t.style.textAlign=F.al.clin==='justify'?'justify':F.al.clin;});
+    const p=pg();if(!p)return;
+    p.style.setProperty('--cf-font',FONTS[F.font]||FONTS.Arial);p.style.setProperty('--cf-size',F.size+'px');p.style.setProperty('--cf-psize',F.psize+'px');p.style.setProperty('--cf-sign',F.sign+'px');p.style.setProperty('--cf-gap',F.gap/100);
+    GROUPS.forEach(([k,,get])=>get().forEach(e=>{if(!e)return;e.style.textAlign=F.al[k];e.style.fontSize=(F.sz[k]/100)+'em';
+      e.querySelectorAll('textarea').forEach(t=>{t.style.textAlign=F.al[k];});}));
+    grow();
   }
-  async function load(){let v=null;try{v=await kvGet(key(),null);}catch(e){}if(v)F={...DEF,...v,al:{...DEF.al,...(v.al||{})}};sync();apply();}
+  function grow(){document.querySelectorAll('#view-certificado textarea').forEach(t=>{try{t.style.height='auto';t.style.height=t.scrollHeight+'px';}catch(e){}});}
+  async function load(){let v=null;try{v=await kvGet(key(),null);}catch(e){}if(v)F={...DEF,...v,al:{...DEF.al,...(v.al||{})},sz:{...DEF.sz,...(v.sz||{})}};sync();apply();}
   async function save(){try{await kvSet(key(),F);}catch(e){}}
-  let box;
   function build(){
     const ctr=document.querySelector('#view-certificado .receta-controls');if(!ctr||box)return;
     box=document.createElement('details');box.className='cert-fmt no-print';
-    const opt=(arr,v)=>arr.map(([a,b])=>`<option value="${a}"${a===v?' selected':''}>${b}</option>`).join('');
     const AL=[['left','Izquierda'],['center','Centrado'],['justify','Justificado'],['right','Derecha']];
-    box.innerHTML=`<summary>⚙ Formato del certificado (letra, tamaño, alineación y firma)</summary><div class="cert-fmt-grid">
+    const opt=(v)=>AL.map(([a,b])=>`<option value="${a}"${a===v?' selected':''}>${b}</option>`).join('');
+    box.innerHTML=`<summary>⚙ Formato del certificado (letra, tamaño por apartado, alineación y firma)</summary>
+      <div class="cert-fmt-grid">
       <label>Tipo de letra<select data-f="font">${Object.keys(FONTS).map(k=>`<option style="font-family:${FONTS[k]}">${k}</option>`).join('')}</select></label>
-      <label>Tamaño en pantalla: <b id="cf-sz-v"></b><input type="range" min="12" max="20" step="0.5" data-f="size"></label>
-      <label>Tamaño al imprimir: <b id="cf-ps-v"></b><input type="range" min="10" max="16" step="0.5" data-f="psize"></label>
-      <label>Espacio para firmar: <b id="cf-sg-v"></b><input type="range" min="40" max="160" step="5" data-f="sign"></label>
-      ${GROUPS.map(([k,n])=>`<label>${n}<select data-a="${k}">${opt(AL,F.al[k])}</select></label>`).join('')}
-      <label style="justify-content:flex-end"><button type="button" class="btn-soft" id="cf-reset">Restablecer formato</button></label></div>`;
+      <label>Tamaño general en pantalla: <b id="cf-size-v"></b><input type="range" min="12" max="20" step="0.5" data-f="size"></label>
+      <label>Tamaño general al imprimir: <b id="cf-psize-v"></b><input type="range" min="9" max="16" step="0.5" data-f="psize"></label>
+      <label>Espacio entre apartados: <b id="cf-gap-v"></b><input type="range" min="0" max="200" step="10" data-f="gap"></label>
+      <label>Espacio para firmar: <b id="cf-sign-v"></b><input type="range" min="30" max="160" step="5" data-f="sign"></label></div>
+      <p class="hint" style="margin:12px 0 4px"><b>Por apartado:</b> ajusta el tamaño (50% a 200%) y la alineación de cada parte.</p>
+      <div class="cert-fmt-rows">${GROUPS.map(([k,n])=>`<div class="cf-row"><span>${n}</span><input type="range" min="50" max="200" step="5" data-s="${k}"><b id="cf-s-${k}"></b><select data-a="${k}">${opt(F.al[k])}</select></div>`).join('')}</div>
+      <div style="margin-top:10px"><button type="button" class="btn-soft" id="cf-reset">Restablecer formato</button></div>`;
     ctr.after(box);
     box.oninput=box.onchange=e=>{const t=e.target;
-      if(t.dataset.f){F[t.dataset.f]=t.type==='range'?+t.value:t.value;}else if(t.dataset.a){F.al[t.dataset.a]=t.value;}else return;
+      if(t.dataset.f)F[t.dataset.f]=t.type==='range'?+t.value:t.value;else if(t.dataset.a)F.al[t.dataset.a]=t.value;else if(t.dataset.s)F.sz[t.dataset.s]=+t.value;else return;
       sync();apply();save();};
     box.querySelector('#cf-reset').onclick=()=>{F=JSON.parse(JSON.stringify(DEF));sync();apply();save();};
-    /* la firma del doctor va dentro del espacio para firmar */
     const sp=document.querySelector('.cert-sign-space'),im=$('cert-firma-img');if(sp&&im)sp.appendChild(im);
     sync();
   }
   function sync(){
     if(!box)return;
     box.querySelector('[data-f=font]').value=F.font;
-    [['size','cf-sz-v'],['psize','cf-ps-v'],['sign','cf-sg-v']].forEach(([k,id])=>{box.querySelector('[data-f='+k+']').value=F[k];$(id).textContent=F[k]+(k==='sign'?' px':' px');});
-    GROUPS.forEach(([k])=>{box.querySelector('[data-a='+k+']').value=F.al[k];});
+    [['size','px'],['psize','px'],['gap','%'],['sign','px']].forEach(([k,u])=>{box.querySelector('[data-f='+k+']').value=F[k];$('cf-'+k+'-v').textContent=F[k]+' '+u;});
+    GROUPS.forEach(([k])=>{box.querySelector('[data-s='+k+']').value=F.sz[k];$('cf-s-'+k).textContent=F.sz[k]+'%';box.querySelector('[data-a='+k+']').value=F.al[k];});
   }
   build();
   const _sv=window.showView;
   window.showView=function(v){const r=_sv.apply(this,arguments);if(v==='certificado'){build();load();}return r;};
+  /* al imprimir: cada caja de texto se sustituye por su contenido exacto (sin líneas en blanco) */
+  window.addEventListener('beforeprint',()=>{document.querySelectorAll('#view-certificado textarea').forEach(t=>{
+    if(t.nextElementSibling&&t.nextElementSibling.classList.contains('print-mirror'))return;
+    const d=document.createElement('div');d.className='print-mirror print-only';d.style.cssText='display:block;white-space:pre-wrap;overflow-wrap:anywhere;text-align:'+t.style.textAlign;d.textContent=t.value;if(!t.value.trim())d.style.display='none';t.after(d);t.style.display='none';});});
+  window.addEventListener('afterprint',()=>{document.querySelectorAll('#view-certificado .print-mirror').forEach(d=>d.remove());document.querySelectorAll('#view-certificado textarea').forEach(t=>t.style.display='');grow();});
   apply();
 })();
 
